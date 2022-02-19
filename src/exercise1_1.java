@@ -1,5 +1,15 @@
+import com.sun.deploy.util.StringUtils;
+import com.sun.xml.internal.bind.v2.TODO;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+import java.util.Collections;
+import java.util.Scanner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,8 +159,83 @@ public class exercise1_1 {
         return result;
     }
 
-    public static void main(String[] args) {
-        // 1.1.1
+    //1.1.16
+    public static String exR1(int n){
+        if (n<=0) return "";
+        return exR1(n-3)+n+exR1(n-2)+n;
+    }
+
+    //1.1.20
+    public static int recurFactorial(int N){
+        // TODO: 2022-02-16 N!
+        if (N==1) return 1;
+        else return N * recurFactorial(N-1);
+    }
+
+    //1.1.21
+    public static void regulateOutput() throws IOException {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Please input as following format: NAME INT1 INT2");
+        System.out.println("Finish by entering END");
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        int i = 0;
+        while (input.hasNext()){
+            String line = input.nextLine();
+            String[] splited = line.split("\\s+");
+            if (splited.length!=3){
+                break;
+            }
+            lines.add(i,splited);
+            i++;
+        }
+        StdOut.printf("%20s%10s%10s%10s", "Name", "Success", "Hit", "Rate");
+        System.out.print("\n");
+        for (String[] s : lines) {
+            Double rate = ((double) Integer.parseInt(s[1]))/Integer.parseInt(s[2]);
+            DecimalFormat df = new DecimalFormat("#.###");
+            StdOut.printf("%20s%10s%10s%10s",s[0],s[1],s[2],df.format(rate));
+            System.out.print("\n");
+        }
+    }
+
+    //1.1.22
+    public static int rank(int key, int[] a){
+        int dep = 0;
+        return rank(key, a, 0, a.length-1, dep);
+    }
+
+    //1.1.24
+    public static void Euclid() throws IOException {
+        Scanner input = new Scanner(System.in);
+        String line = input.nextLine();
+        String[] ints = line.split("\\s+");
+        if (ints.length!=2){
+            System.out.println("Please insert two integers.");
+        }
+        Euclid(Integer.parseInt(ints[0]),Integer.parseInt(ints[1]));
+    }
+    public static int Euclid(int p, int q){
+        System.out.println("The value of 'p' is: "+p+". The value of 'q' is: "+q+".");
+        if (q==0) {
+            System.out.println("The largest common devisor is: "+p);
+            return p;
+        }
+        int r=p % q;
+        return Euclid(q,r);
+    }
+
+    public static int rank(int key, int[] a, int lo, int hi, int depth){
+        //TODO: binary search, recursive
+        if (lo > hi ){return -1;}
+        int mid = lo + (hi-lo)/2;
+        System.out.println(Collections.nCopies(depth, " ") + "lo: " +lo+";    hi: "+hi);
+        if (key<a[mid]) return rank(key, a, lo, mid-1,depth++);
+        else if(key>a[mid]) return rank(key, a, mid+1, hi, depth++);
+        else return mid;
+    }
+
+    public static void main(String[] args) throws IOException {
+      /*// 1.1.1
         System.out.println(7);
         System.out.println(200.0000002D);
         System.out.println(true);
@@ -220,5 +305,38 @@ public class exercise1_1 {
         for (int i : countFre(array,6)) {
             System.out.print(i+" ");
         }
+
+        //1.1.16
+        System.out.println("*** 1.1.16 ***");
+        System.out.println(exR1(6));
+
+        //1.1.17
+        System.out.println("*** 1.1.17 ***");
+        System.out.println("(1)Calculate a(2^0+x^1+ ... +2^n), where 2^(n+1)>b>2^n");
+        System.out.println("(2)Calculate a^1+a^2+ ... +a^n, where 2^(n+1)>b>2^n");
+
+        //1.1.18
+        System.out.println("*** 1.1.18 ***");
+
+        //1.1.20
+        System.out.println("*** 1.1.20 ***");
+        System.out.println(Math.log(recurFactorial(10)));
+
+        //1.1.21
+        System.out.println("*** 1.1.21 ***");
+        regulateOutput();
+
+        //1.1.22
+        System.out.println("*** 1.1.22 ***");
+        int[] binarySearch = new int[]{1,2,3,4,5,6,7,8,9,10};
+        System.out.println("The location is at: "+rank(9,binarySearch));
+
+        //1.1.23
+        // Can hardly understand the requirement of the question, didn't define what is "whitelist" or "blacklist"
+        */
+        //1.1.24
+        System.out.println("*** 1.1.24 ***");
+        System.out.println("Please insert two integers.");
+        Euclid();
     }
 }
