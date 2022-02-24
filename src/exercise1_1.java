@@ -204,6 +204,16 @@ public class exercise1_1 {
         return rank(key, a, 0, a.length-1, dep);
     }
 
+    public static int rank(int key, int[] a, int lo, int hi, int depth){
+        //TODO: binary search, recursive
+        if (lo > hi ){return -1;}
+        int mid = lo + (hi-lo)/2;
+        System.out.println(Collections.nCopies(depth, " ") + "lo: " +lo+";    hi: "+hi);
+        if (key<a[mid]) return rank(key, a, lo, mid-1,depth++);
+        else if(key>a[mid]) return rank(key, a, mid+1, hi, depth++);
+        else return mid;
+    }
+
     //1.1.24
     public static void Euclid() throws IOException {
         Scanner input = new Scanner(System.in);
@@ -224,14 +234,77 @@ public class exercise1_1 {
         return Euclid(q,r);
     }
 
-    public static int rank(int key, int[] a, int lo, int hi, int depth){
-        //TODO: binary search, recursive
-        if (lo > hi ){return -1;}
-        int mid = lo + (hi-lo)/2;
-        System.out.println(Collections.nCopies(depth, " ") + "lo: " +lo+";    hi: "+hi);
-        if (key<a[mid]) return rank(key, a, lo, mid-1,depth++);
-        else if(key>a[mid]) return rank(key, a, mid+1, hi, depth++);
-        else return mid;
+    //1.1.27
+    public static double binomial(int N, int k, double p){
+        //TODO: construct a (N+1)*(N+1) matrix b. b[N][k] = (1-p)b[N-1][k]+pb[N-1][K-1]
+        double[][] b = new double[N+1][k+1];
+        //initialize i=0; j=0;
+        b[0][0]=1;
+        for (int i = 1; i <= k; i++) {
+            b[0][i] = 0;
+        }
+        for (int i = 1; i <= N; i++) { //nrow
+            for (int j = 0; j <= k; j++) { //ncol
+                if (j==0) {b[i][j] = (1-p)*b[i-1][j];}
+                else
+                    {b[i][j] = (1-p)*b[i-1][j]+p*b[i-1][j-1];}
+            }
+        }
+        return b[N][k];
+    }
+
+    //1.1.28
+    public static int[] removeDuplicate(int[] a){
+        ArrayList arr = new ArrayList();
+        for (int i = 0; i < a.length; i++) {
+            arr.add(i,a[i]);
+        }
+        for (int i = 0; i < arr.size()-1; i++) {
+            if (arr.get(i)==arr.get(i+1)){arr.remove(i+1); i--;}
+        }
+        int[] result = new int[arr.size()];
+        for (int i = 0; i < arr.size(); i++) {
+            result[i] = (int)arr.get(i);
+        }
+        return result;
+    }
+
+    //1.1.29
+    public static int rank_2(int key, int[] a){
+        //TODO: return the number of element that smaller than the key
+        int n=0;
+        while (key > a[n] && n < a.length){n++;}
+        return n;
+    }
+
+    public static int count(int key, int[] a){
+        //TODO: return the number of element that equals to the key
+        int n=0;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i]==key){n++;}
+            if (a[i]>key){break;}
+        }
+        return n;
+    }
+
+    //1.1.30
+    public static boolean[][] ifPrime(int N){
+        boolean[][] result = new boolean[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                result[i][j]=relativePrime(i+1,j+1);
+            }
+        }
+        return result;
+    }
+
+    public static boolean relativePrime(int p, int q){
+        if (q==0) {
+            if (p==1 || p==0){return false;}
+            return true;
+        }
+        int r=p % q;
+        return relativePrime(q,r);
     }
 
     public static void main(String[] args) throws IOException {
@@ -333,10 +406,52 @@ public class exercise1_1 {
 
         //1.1.23
         // Can hardly understand the requirement of the question, didn't define what is "whitelist" or "blacklist"
-        */
+
         //1.1.24
         System.out.println("*** 1.1.24 ***");
         System.out.println("Please insert two integers.");
         Euclid();
+
+        //1.1.27
+        System.out.println("*** 1.1.27 ***");
+        System.out.println(binomial(4, 1, 0.1));
+
+        //1.1.28
+        System.out.println("*** 1.1.28 ***");
+        int[] whitelist = new int[]{0,0,1,1,1,1,1,1,2,2,3,3,3,5,5,10};
+        int[] whitellist_2 = removeDuplicate(whitelist);
+        for (int i = 0; i < whitellist_2.length; i++) {
+            System.out.print(whitellist_2[i]+" ");
+        }
+        System.out.print('\n');
+
+        //1.1.29
+        System.out.println("*** 1.1.29 ***");
+        int k = 2;
+        System.out.println("The number of element smaller than "+k+" is: "+rank_2(k,whitelist));
+        System.out.println("The number of element equals to "+k+" is: "+count(k,whitelist));
+
+        //1.1.30
+        System.out.println("*** 1.1.30 ***");
+        int N = 10;
+        boolean[][] matri = ifPrime(N);
+        for (int i = 0; i < N; i++) {
+            if (i!=0){System.out.print("\n");StdOut.printf("%5s",i+1);}
+            for (int j = 0; j < N; j++) {
+                if (i==0 && j==0){
+                    System.out.print("\n");
+                    StdOut.printf("%5s",i);
+                    for (int k = 0; k < N; k++) {
+                        StdOut.printf("%8s",k+1);
+                    }
+                    System.out.print("\n");
+                    StdOut.printf("%5s",i+1);
+                }
+                StdOut.printf("%8s",matri[i][j]);
+            }
+        }
+        System.out.println("\n");
+
+       */
     }
 }
