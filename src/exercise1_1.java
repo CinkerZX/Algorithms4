@@ -1,18 +1,25 @@
 import com.sun.deploy.util.StringUtils;
 import com.sun.xml.internal.bind.v2.TODO;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdStats;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.random;
 
 public class exercise1_1 {
     // 1.1.3
@@ -139,6 +146,7 @@ public class exercise1_1 {
 
     //1.1.15
     public static int[] countFre(int[] arr, int M){
+        //TODO: returns an array of length M whose ith entry is the number of times the integer i appeared in the argument array
         int[] result = new int[M];
         Arrays.fill(result, 0);
         ArrayList<Integer> arr_2 = new ArrayList<Integer>();
@@ -154,7 +162,6 @@ public class exercise1_1 {
                     break;
                 }
             }
-            i++;
         }
         return result;
     }
@@ -307,6 +314,177 @@ public class exercise1_1 {
         return relativePrime(q,r);
     }
 
+    //1.1.31
+    public static void randomNet() throws IOException {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Please input the number of nodes N: ");
+        int N = input.nextInt();
+        System.out.println("Please input the probability of connection p which is between 0 and 1): ");
+        double p = input.nextDouble();
+        input.close();
+        JFrame f = new JFrame();
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.add(new Circle(N,p));
+        f.pack();
+        f.setVisible(true);
+    }
+
+    public static class Circle extends JPanel{
+        //TODO: draw the net
+        private final int SIZE = 256;
+        private int a = SIZE / 2;
+        private int b = a;
+        private int r = 4 * SIZE / 5;
+        private int n;
+        private double p;
+
+        public Circle(int n, double p){
+            super(true);
+            if (n<50){
+                this.setPreferredSize(new Dimension(SIZE, SIZE));
+            }
+            else{this.setPreferredSize(new Dimension(n*5, n*5));}
+            this.n = n;
+            this.p = p;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g){
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setColor(Color.BLACK);
+            a = getWidth()/2;
+            b = getHeight()/2;
+            int m = Math.min(a,b);
+            r=4*m/5;
+//            g2d.drawOval(a - r, b - r, 2 * r, 2 * r);
+            int r2 = 3;
+            int[][] nodeXY = new int[n][2];
+            for (int i = 0; i < n; i++) {
+                double t=2*Math.PI *i/n;
+                int x = (int) Math.round(a + r*Math.cos(t));
+                int y = (int) Math.round(b + r*Math.sin(t));
+                g2d.fillOval(x-r2,y-r2,2*r2,2*r2);
+                nodeXY[i][0]=x;
+                nodeXY[i][1]=y;
+            }
+            g2d.setColor(Color.gray);
+            for (int i = 0; i < n ; i++) {
+                for (int j = i + 1; j < n; j++) {
+                    if (random() < p) {
+                        g2d.drawLine(nodeXY[i][0], nodeXY[i][1], nodeXY[j][0], nodeXY[j][1]);
+                    }
+                }
+            }
+        }
+
+    }
+
+    //1.1.31
+    public static void countHistogram(double[] stream) {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Please input the number of intervals N: ");
+        int N = input.nextInt();
+        System.out.println("Please initiate double l: ");
+        double l = input.nextDouble();
+        System.out.println("Please initiate double r: ");
+        double r = input.nextDouble();
+        input.close();
+        Arrays.sort(stream);
+        int[] countResult = new int[N];
+        Arrays.fill(countResult,0);
+        double delta = (r-l)/N;
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < stream.length; j++) {
+                if (stream[j]>l+i*delta){
+                    if (stream[j]<l+(i+1)*delta){countResult[i]++;}
+                    else{i++;j--;}
+                }
+            }
+        }
+        JFrame frame = new JFrame();
+        frame.add(new histogram(countResult));
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    public static class histogram extends JPanel{
+        //TODO: draw the histogram
+        private int[] countResult;
+        private int max;
+        private final int SIZE = 500;
+
+
+        public histogram(int[] countR) {
+            this.countResult = countR;
+            max = Arrays.stream(countR).max().getAsInt();
+            this.setPreferredSize(new Dimension(SIZE, SIZE));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+            int barWidth = SIZE / countResult.length;
+            for (int i = 0; i < countResult.length; i++) {
+                int barHeight = (int)((countResult[i] / (double)max) * (getHeight()-50));
+                Rectangle rect = new Rectangle(i * barWidth, getHeight() - barHeight, barWidth, barHeight);
+                g2d.setColor(Color.gray);
+                g2d.fill(rect);
+                g2d.setColor(Color.BLACK);
+                g2d.draw(rect);
+            }
+            g2d.dispose();
+        }
+    }
+
+    //1.1.35
+    public static double[] diceSimulation(int N){
+        int[] arr = new int[N];
+//        double n = (double)Math.ceil(N);
+        int Min = 1;
+        int Max = 6;
+        for (int i = 0; i < N; i++) {
+            Random rand = new Random();
+//            arr[i] = rand.nextInt((Max - Min) + 1) + Min + rand.nextInt((Max - Min) + 1) + Min - 2*Min;
+            arr[i] = rand.nextInt((Max - Min) + 1) + rand.nextInt((Max - Min) + 1); //2-12 -> 0-10
+        }
+        double[] fre = IntStream.of(countFre(arr,11)).mapToDouble(d -> (double) Math.ceil(d)).toArray();
+        double[] prodis = DoubleStream.of(fre).map(d->d/(double) Math.ceil(N)).toArray();
+        return prodis;
+    }
+
+    public static double[] disStandard(){
+        int SIDES=6;
+        double[] dist = new double[2*SIDES+1];
+        for (int i = 1; i <= SIDES; i++) {
+            for (int j = 1 ; j <=SIDES ; j++) {
+                dist[i+j] +=1.0;
+            }
+        }
+        double[] dist_2 = new double[11];
+        for (int i = 2; i <= 2*SIDES ; i++) {
+            dist_2[i-2] = dist[i] / 36.0;
+        }
+        return dist_2;
+    }
+
+    public static double maxDiffer(double[] a, double[] b){
+        //TODO: max(a[i] - b[i])
+        double maxDif = 0;
+        double dif = 0;
+        for (int i = 0; i < a.length; i++) {
+            dif = Math.abs(a[i]-b[i]);
+            if (dif > maxDif){
+                maxDif = dif;
+            }
+        }
+        return maxDif;
+    }
+
     public static void main(String[] args) throws IOException {
       /*// 1.1.1
         System.out.println(7);
@@ -347,7 +525,7 @@ public class exercise1_1 {
 
         //1.1.9
         System.out.println(NumtoBinary(10));
-        
+
         //1.1.11
         System.out.println("*** 1.1.11 ***");
         ArrayList<boolean[]> booArray = new ArrayList<boolean[]>();
@@ -452,6 +630,24 @@ public class exercise1_1 {
         }
         System.out.println("\n");
 
-       */
+        System.out.println("*** 1.1.31 ***");
+        randomNet();
+
+        System.out.println("*** 1.1.32 ***");
+        int N = 1000;
+        double[] stream = new double[N];
+        for (int i = 0; i <N; i++) {
+            stream[i] = random();
+        }
+        countHistogram(stream);
+
+
+        System.out.println("*** 1.1.34 ***");
+        System.out.println("Answer: all needs to save all the values from standard input.");
+*/
+        System.out.println("*** 1.1.35 ***");
+        //TODO: Find the smallest N that makes the error of probability (compared with standard ones) within 0.001
+        System.out.println(maxDiffer(disStandard(), diceSimulation(200000))); // 8.766666666666645E-4
+        
     }
 }
