@@ -441,7 +441,6 @@ public class exercise1_1 {
     //1.1.35
     public static double[] diceSimulation(int N){
         int[] arr = new int[N];
-//        double n = (double)Math.ceil(N);
         int Min = 1;
         int Max = 6;
         for (int i = 0; i < N; i++) {
@@ -551,14 +550,82 @@ public class exercise1_1 {
     }
 
     //1.1.38
-//    public static void BruteForceSearch() {
-//        int[] whitelist = In.readInts()
-//    }
+    public static void BruteForceSearch() {
+        long startTime = System.nanoTime();
+        int[] whitelist = In.readInts("https://algs4.cs.princeton.edu/11model/largeAllowlist.txt");
+        int[] dataArray = In.readInts("https://algs4.cs.princeton.edu/11model/largeText.txt");
+        for (int i = 0; i < whitelist.length; i++) {
+            bruteRank(whitelist[i],dataArray);
+        }
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println("The running time of BruteForceSearch: "+totalTime);
+        Arrays.sort(dataArray);
+        for (int i = 0; i < whitelist.length; i++) {
+            rank(whitelist[i],dataArray);
+        }
+        long endTime_2   = System.nanoTime();
+        long totalTime_2 = endTime_2 - endTime;
+        System.out.println("The running time for sorting + binarary search: "+totalTime_2);
+    }
+
     public static int bruteRank(int key, int[] a){
         for (int i = 0; i < a.length; i++) {
             if (a[i] == key) return i;
         }
         return -1;
+    }
+
+    //1.1.39
+    public static void BinarySearch(int T){
+        //TODO: T trails of N = 10^3, 10^4, 10^5, 10^6
+        int[] N = new int[]{1000, 10000, 100000, 1000000};
+        int numTrails = T;
+        double[][] result = new double[2][4];
+        for (int i = 0; i < N.length; i++) {
+            int numValue_1 = 0; // ini
+            int numValue_2 = 0;
+            T = numTrails;
+            while(T>0){
+                int[] a_1 = six_digitRandomInt(N[i]);
+                numValue_1 += numValuesCounter(a_1);
+                int[] a_2 = six_digitRandomInt(N[i]);
+                numValue_2 += numValuesCounter(a_2);
+                T--;
+            }
+            result[0][i] = numValue_1 /(double) numTrails;
+            result[1][i] = numValue_2 /(double) numTrails;
+        }
+        // Print out the table
+        StdOut.printf("%12s %12s %12s %12s %12s", new String[]{"", "N = 10^3", "N = 10^4", "N = 10^5", "N = 10^6"});
+        String[] s = new String[]{"Array1", "Array2"};
+        for (int i = 0; i < 2; i++) {
+            StdOut.printf("\n");
+            StdOut.printf("%12s", s[i]);
+            for (int j = 0; j < 4; j++) {
+                StdOut.printf(" %12.2f",result[i][j]);
+            }
+        }
+    }
+
+    public static int[] six_digitRandomInt(int N){
+        int[] a = new int[N];
+        for (int i = 0; i < N; i++) {
+            Random rnd = new Random();
+            a[i] = 100000 + rnd.nextInt(900000);
+        }
+        return a;
+    }
+    public static int numValuesCounter(int[] a){
+        //TODO: count the number of values in an array. For example: (input) a = [1,1,1,2,2,3] (output) 3
+        int result = a.length; // result is initialized with the value "a.length".
+        Arrays.sort(a);
+        for (int i = 0; i < a.length-1; i++) {
+            if(a[i]==a[i+1]){
+                result--;
+            }
+        }
+        return result;
     }
 
     public static void main(String[] args) throws IOException {
@@ -738,8 +805,17 @@ public class exercise1_1 {
 //        5849 4482 4757 4912
 //        4920 5588 4526 4966
 //        4239 4946 5762 5053
-        */
-        System.out.println("*** 1.1.38 ***");
 
+        System.out.println("*** 1.1.38 ***");
+        BruteForceSearch(); // need to command line 225
+//        The running time of BruteForceSearch: 268105923200
+//        The running time for sorting + binarary search: 1618247800
+       */
+        System.out.println("*** 1.1.39 ***");
+        BinarySearch(20);
+
+//        N = 10^3     N = 10^4     N = 10^5     N = 10^6
+//        Array1       999.15      9945.50     94649.15    603746.15
+//        Array2       999.15      9948.20     94617.40    603719.50
     }
 }
