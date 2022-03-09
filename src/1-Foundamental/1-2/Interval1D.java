@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Interval1D {
+public class Interval1D implements Interval{
     private double l; // left boundary
     private double r; // right boundary
 
