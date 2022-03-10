@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Interval2D implements Interval{
+public class Interval2D implements Interval <Interval2D>{
     private Interval1D x; // interval on X
     private Interval1D y; // interval on Y
 
@@ -34,7 +34,6 @@ public class Interval2D implements Interval{
 
     @Override
     public void printInterval() {
-
     }
 
     public boolean equals(Interval2D scale){
@@ -83,7 +82,6 @@ public class Interval2D implements Interval{
                 }
             }
         }
-
         System.out.println("The number of pairs of intervals that intersect: "+numIntersectIntervalPairs);
         System.out.println("The number of pairs of intervals that contained each other: "+numSameIntervalPaires);
     }

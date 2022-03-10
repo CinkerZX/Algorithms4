@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Interval1D implements Interval{
+public class Interval1D implements Interval <Interval1D>{
     private double l; // left boundary
     private double r; // right boundary
 
@@ -29,7 +29,7 @@ public class Interval1D implements Interval{
             return new Interval1D(newL, newR);
         }
         catch (Exception IllegalArgumentException){
-            System.out.println("There is no interval");
+//            System.out.println("There is no interval");
             return label;
         }
     }

@@ -1,4 +1,6 @@
-public interface Interval {
+public interface Interval <T> {
+
+    public T intersect(T scale);
 
     public void printInterval();
 
