@@ -19,7 +19,7 @@ public class VisualCounter {
         StdDraw.setYscale(-max,max);
     }
 
-    public void increament() throws IllegalStateException{
+    public void increment() throws IllegalStateException{
         if (this.curN == N) throw new IllegalStateException("Already reach the maximum operation limit!");
         if (this.curCount == max) throw new IllegalStateException("Reach the maximum counting number!");
         this.curCount++;
@@ -27,12 +27,17 @@ public class VisualCounter {
         DrawCount();
     }
 
-    public void decreament() throws IllegalStateException{
+    public void decrement() throws IllegalStateException{
         if (this.curN == N) throw new IllegalStateException("Already reach the maximum operation limit!");
         if (this.curCount == -max) throw new IllegalStateException("Reach the maximum counting number!");
         this.curCount--;
         this.curN++;
         DrawCount();
+    }
+
+    public int tally(){
+        //TODO: num of increments since creation
+        return curCount + (curN-curCount)/2;
     }
 
     private void DrawCount(){
@@ -45,11 +50,11 @@ public class VisualCounter {
 
     public static void main(String[] args) {
         VisualCounter vc = new VisualCounter(4, 3);
-        vc.increament();
-        vc.increament();
-        vc.increament();
-        vc.decreament();
-        vc.decreament();
+        vc.increment();
+        vc.increment();
+        vc.increment();
+        vc.decrement();
+        vc.decrement();
     }
     
     
