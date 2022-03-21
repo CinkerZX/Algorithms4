@@ -1,0 +1,12 @@
+https://blog.csdn.net/huangjw_806/article/details/78297851
+
+进入到zhijun分支  
+git checkout zhijun 
+
+1. git add . 
+
+2. git status 
+
+3. git commit -m "打报告"
+
+4. git push origin zhijun 
