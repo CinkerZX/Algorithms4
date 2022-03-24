@@ -39,6 +39,9 @@ public class Main {
 
         // test for 1.1.5
         System.out.println(test5(0.8,1.2));
+
+        //test for 1.1.6
+        System.out.println(test6(33));
     }
 
     //1.1.3
@@ -61,4 +64,15 @@ public class Main {
         return result5;
     }
 
+    //1.1.6
+    public static String test6 (int x6){
+        String result6;
+        result6 = "";
+        while(x6 != 0){
+            int remainder = x6 % 2;
+            result6 = remainder + result6;
+            x6 /= 2;  // x6 = x6/2;
+        }
+        return result6;
+    }
 }
