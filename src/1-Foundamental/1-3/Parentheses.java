@@ -44,10 +44,54 @@ public class Parentheses {
         }
     }
 
+    public static String insertParenthese(String s){
+        //delete all the space
+        Stack myStack = new Stack();
+        String c = ")";
+        String resultS = new String();
+        for (int i = 0; i < s.length(); i++) {
+            myStack.push(s.charAt(i));
+            if (c.equals(s.charAt(i))){
+                while(!myStack.isEmpty()){
+                    resultS = resultS+myStack.pop().toString();
+                }
+                if (!checkParenthese(resultS) && i < s.length()){
+                    return insertParentheseHelper(resultS,s,i);
+                }
+                if (!checkParenthese(resultS) && i == s.length()){
+                    return insertParentheseHelper(resultS,s,i);
+                }
+            }
+        }
+        if (checkParenthese(resultS)){ return resultS;}
+        else{return "The finial result is: "+resultS;}
+    }
+
+    public static String insertParentheseHelper(String s, String originS, int cut){
+        String a = "()";
+        String b = "+-"; // find ), go back unless meet one + OR - go back till the end + ( OR till * OR /
+        String c = "*/";
+        Stack myStack = new Stack();
+        String result = new String();
+        int num1 = 0; // num of + and -
+        int num2 = 0; // num of (
+        int i = 0;
+        while(num2==num1 && i < s.length()){ // go back unless meet + OR -
+            myStack.push(s.charAt(i));
+            if(s.charAt(i) == b.charAt(0) || s.charAt(i) != b.charAt(1)){ num1++;}
+            if (s.charAt(i) == a.charAt(0)){ num2++;}
+            i++;
+        }
+        if (i==s.length() || (num2!=num1 && (s.charAt(i) == c.charAt(0) || s.charAt(i) == c.charAt(1)))){myStack.push("(");}
+        while(!myStack.isEmpty()){
+            result = result+myStack.pop().toString();
+        }
+        return insertParenthese(result+s.substring(cut+1,s.length()));
+    }
+
     public static void main(String[] args) {
         String s = args[0];
         if (checkParenthese(s)){ System.out.println("Parentheses");}
         else{System.out.println("Not parentheses");}
-        
     }
 }
