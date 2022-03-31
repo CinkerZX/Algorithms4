@@ -1,3 +1,5 @@
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.util.Stack;
 
 public class Parentheses {
@@ -45,53 +47,111 @@ public class Parentheses {
     }
 
     public static String insertParenthese(String s){
-        //delete all the space
-        Stack myStack = new Stack();
-        String c = ")";
-        String resultS = new String();
-        for (int i = 0; i < s.length(); i++) {
-            myStack.push(s.charAt(i));
-            if (c.equals(s.charAt(i))){
-                while(!myStack.isEmpty()){
-                    resultS = resultS+myStack.pop().toString();
-                }
-                if (!checkParenthese(resultS) && i < s.length()){
-                    return insertParentheseHelper(resultS,s,i);
-                }
-                if (!checkParenthese(resultS) && i == s.length()){
-                    return insertParentheseHelper(resultS,s,i);
+        s = s.replaceAll("\\s",""); //delete all the space
+        if (checkParenthese(s)){ return s;}
+        else{
+            //TODO: put the char into a stack unless meet a ")" and string in the stack is unparenthese, then call helper
+            Stack myStack = new Stack();
+            String c = ")";
+            String resultS = new String();
+            for (int i = 0; i < s.length(); i++) {
+                myStack.push(String.valueOf(s.charAt(i)));
+                if (c.equals(String.valueOf(s.charAt(i)))){
+                    resultS = stackToString(myStack);
+                    if (!checkParenthese(resultS) && i < s.length()){
+                        s = insertParentheseHelper(resultS,s,i)+s.substring(i+1,s.length());
+                        return insertParenthese(s);
+                    }
+                    if (!checkParenthese(resultS) && i == s.length()){ // the last time, get all
+                        return "("+resultS;
+                    }
+                    if (checkParenthese(resultS) && resultS.length() < s.length()){
+                        myStack= stringToStack(resultS);
+                    }
                 }
             }
+            return "The finial result is: "+resultS;
         }
-        if (checkParenthese(resultS)){ return resultS;}
-        else{return "The finial result is: "+resultS;}
+//        if (checkParenthese(resultS)){ return resultS;}
+    }
+
+    public static String stackToString(Stack s){ // first in first out
+        //TODO: pop out all the elements in a stack and return a string
+        String result = new String();
+        while(!s.isEmpty()){
+            result = s.pop().toString()+result;
+        }
+        return result;
+    }
+
+    public static String stackToString2(Stack s){ // first in last out
+        //TODO: pop out all the elements in a stack and return a string
+        String result = new String();
+        while(!s.isEmpty()){
+            result = result+s.pop().toString();
+        }
+        return result;
+    }
+
+    public static Stack stringToStack(String s){ // first in first out
+        //TODO: pop out all the elements in a stack and return a string
+        Stack result = new Stack();
+        for (int i = 0; i < s.length(); i++) {
+            result.add(String.valueOf(s.charAt(i)));
+        }
+        return result;
     }
 
     public static String insertParentheseHelper(String s, String originS, int cut){
+        //TODO: find ), go back unless meet one + OR - go back till the end + ( OR till * OR /
         String a = "()";
-        String b = "+-"; // find ), go back unless meet one + OR - go back till the end + ( OR till * OR /
+        String b = "+-";
         String c = "*/";
         Stack myStack = new Stack();
-        String result = new String();
+        String parentResult = new String();
         int num1 = 0; // num of + and -
-        int num2 = 0; // num of (
+        int num2 = 0; // num of ()
+        int num3 = 0; // num of * and /
         int i = 0;
-        while(num2==num1 && i < s.length()){ // go back unless meet + OR -
-            myStack.push(s.charAt(i));
-            if(s.charAt(i) == b.charAt(0) || s.charAt(i) != b.charAt(1)){ num1++;}
-            if (s.charAt(i) == a.charAt(0)){ num2++;}
+        String temp = new String();
+        while(!(Math.abs(num1+num3-num2)==1 && num3>0 && num1 > 0) && i < s.length()){ // go back unless meet + OR -
+            char c1 = s.charAt(s.length() - i - 1);
+            myStack.push(String.valueOf(c1));
+            if(c1 == b.charAt(0) || c1 == b.charAt(1)){ num1++;}  //b: +-
+            if(c1 == c.charAt(0) || c1 == c.charAt(1)){ num3++;}  //c: */
+            if (c1 == a.charAt(1)){ num2++;} //a: )
+            if (c1== a.charAt(0)){
+                num2--;
+                if (num1>0){ num1--;}
+                if (num3>0){ num3--;}
+            }
             i++;
         }
-        if (i==s.length() || (num2!=num1 && (s.charAt(i) == c.charAt(0) || s.charAt(i) == c.charAt(1)))){myStack.push("(");}
-        while(!myStack.isEmpty()){
-            result = result+myStack.pop().toString();
+        if (i==s.length()){
+            myStack.push("(");
+            parentResult = stackToString2(myStack);
+            return parentResult;
         }
-        return insertParenthese(result+s.substring(cut+1,s.length()));
+        if (Math.abs(num1+num3-num2)==1 && s.length()<=originS.length()){
+            temp = (String) myStack.pop();
+            myStack.push("(");
+            myStack.push(temp);
+            parentResult = stackToString2(myStack);
+            return s.substring(0,s.length()-i)+parentResult;
+        }
+        return "************";
     }
 
     public static void main(String[] args) {
-        String s = args[0];
-        if (checkParenthese(s)){ System.out.println("Parentheses");}
-        else{System.out.println("Not parentheses");}
+        String s1 = "1+2 )";
+        System.out.println(insertParenthese(s1));
+        String s2 = "1+2 )*3";
+        System.out.println(insertParenthese(s2));
+        String s3 = "1+2 )*3-4)";
+        System.out.println(insertParenthese(s3));
+        String s4 = "1+2 )*3-4))";
+        System.out.println(insertParenthese(s4));
+        String s5 = "1+2 )*3-4)*2+1)";
+        System.out.println(insertParenthese(s5));
     }
 }
