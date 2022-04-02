@@ -22,7 +22,7 @@ public class InfixToPostfix {
     public static String infixToPostHelper(String incoming, Stack myStack, String curResult, String Origin, int cut){
         //TODO: compare operator
         while (curResult.length()!=Origin.length() && cut < Origin.length()){
-            if (!incoming.matches("[+\\-*/]")){ // not an operator
+            if (!incoming.matches("[+\\-*/()]")){ // not an operator
                 curResult = curResult+incoming;
                 cut++;
                 if (cut == Origin.length()){
@@ -45,6 +45,21 @@ public class InfixToPostfix {
                     String a = "+-";
                     String temp;
                     temp = (String) myStack.pop();
+                    if (incoming.equals("(")){ // add it into the stack
+                        myStack.push(incoming);
+                        cut++;
+                        return infixToPostHelper(String.valueOf(Origin.charAt(cut)), myStack, curResult, Origin, cut);
+                    }
+                    if (incoming.equals(")")){ // move all the element from the stack (temp) until meet "(". "(" need to be removed also
+                        curResult = curResult + temp;
+                        temp = (String) myStack.pop();
+                        while(!temp.equals("(")){
+                            curResult = curResult + temp;
+                            temp = (String) myStack.pop();
+                        }
+                        cut++;
+                        return infixToPostHelper(String.valueOf(Origin.charAt(cut)), myStack, curResult, Origin, cut);
+                    }
                     int temp_level; // in tha stack
                     int curOperator_level; // from the expression
                     if (temp.equals(String.valueOf(a.charAt(0))) || temp.equals(String.valueOf(a.charAt(1)))){ temp_level = 0;}
