@@ -1,9 +1,7 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.text.ParseException;
+import java.util.*;
 
-public class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Iterable<E>{
+class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Iterable<E>{
     //TODO: create an fixed size array class virtually, but extend it to changeable size by implement Queue.
     //TODO: Queue has add function, we just override the add function, realizing resizing function
     private ArrayList<E> myQueue;
@@ -14,6 +12,14 @@ public class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<
         myQueue = new ArrayList<E>(n);
         length = 0;
         capacity = n;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public E[] toArraylist(){
+        return (E[]) myQueue.subList(0,length).toArray();
     }
 
     @Override
@@ -80,7 +86,7 @@ public class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<
 
             @Override // Override the original result
             public boolean hasNext(){
-                return (i <= length);
+                return (i < length);
             }
 
             @Override
@@ -94,7 +100,7 @@ public class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<
         return iter;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException, InterruptedException {
         ResizeArrayQueueOfStrings q = new ResizeArrayQueueOfStrings(3);
         q.add("One");
         q.add("Two");
