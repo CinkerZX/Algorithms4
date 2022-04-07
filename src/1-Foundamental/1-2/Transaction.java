@@ -1,4 +1,6 @@
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Transaction implements Comparable<Transaction> {
     private final String who;
@@ -16,6 +18,22 @@ public class Transaction implements Comparable<Transaction> {
         this.who = elements[0];
         this.amount = Double.parseDouble(elements[2]);
         this.when = new SmartDate(elements[4]);
+    }
+
+    public Transaction(String name, Date d, Double amount) {
+        this.who = name;
+        this.when = DateToSmartDate(d);
+        this.amount = amount;
+    }
+
+    public SmartDate DateToSmartDate(Date d){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        int month = cal.get(Calendar.MONTH); // month is from 0-11, thus need to +1 when create SmartDate
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        SmartDate sd = new SmartDate(month+1, day, year);
+        return sd;
     }
 
     public String toString(){
