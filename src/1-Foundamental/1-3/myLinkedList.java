@@ -119,6 +119,25 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
         }
     }
 
+    public static int max(myNode h){
+        //TODO: return the value of the maxium key in the list, input is the head of the list
+        int result = 0;
+        h = h.getNext(); // the first node after head
+        return maxHelper(h, result);
+    }
+
+    public static int maxHelper(myNode newNode, int result){
+        while(newNode.getData()!=null){
+            int temp = (int) newNode.getData();
+            if (temp >result){result = temp;}
+            newNode = newNode.getNext();
+            if (newNode == null){return result;}
+            else return maxHelper(newNode, result);
+        }
+        return result;
+    }
+
+    //Helpers
     public void printOutList(){
         myNode pointer = head.getNext();
         while (pointer.getData() != null){
@@ -147,46 +166,53 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
         mylist.delete(3);
         System.out.println("After deleting the 3 ed element: ");
         mylist.printOutList();
+//
+//        // Test find
+//        myLinkedList<String> mylist2 = new myLinkedList<>();
+//        mylist2.add("I");
+//        mylist2.add("am");
+//        mylist2.add("perfect");
+//        mylist2.add("and");
+//        mylist2.add("happy");
+//        System.out.println(find(mylist2,"happy"));
+//        System.out.println(find(mylist2,"Happy"));
+//        System.out.println(find(mylist2,"I"));
+//
+//        // Test removeAfter
+//        mylist2.printOutList();
+//        myNode aimNd = new myNode("and");
+//        mylist2.removeAfter(aimNd);
+//        mylist2.printOutList();
+//        myNode aimNd2 = new myNode("happy");
+//        mylist2.removeAfter(aimNd2);
+//        mylist2.printOutList();
+//
+//        // Test insertAfter
+//        mylist2.insertAfter(aimNd,aimNd2);
+//        mylist2.printOutList();
+//        myNode aimNd3 = new myNode("haha");
+//        mylist2.insertAfter(aimNd3,aimNd2);
+//        mylist2.printOutList();
+//
+//        // Test remove
+//        myLinkedList<String> mylist3 = new myLinkedList<>();
+//        mylist3.add("Today");
+//        mylist3.add("is");
+//        mylist3.add("a");
+//        mylist3.add("beautiful");
+//        mylist3.add("day");
+//        mylist3.add("and");
+//        mylist3.add("today");
+//        mylist3.add("is");
+//        mylist3.add("Saturday");
+//        remove(mylist3,"is");
+//        mylist3.printOutList();
 
-        // Test find
-        myLinkedList<String> mylist2 = new myLinkedList<>();
-        mylist2.add("I");
-        mylist2.add("am");
-        mylist2.add("perfect");
-        mylist2.add("and");
-        mylist2.add("happy");
-        System.out.println(find(mylist2,"happy"));
-        System.out.println(find(mylist2,"Happy"));
-        System.out.println(find(mylist2,"I"));
-
-        // Test removeAfter
-        mylist2.printOutList();
-        myNode aimNd = new myNode("and");
-        mylist2.removeAfter(aimNd);
-        mylist2.printOutList();
-        myNode aimNd2 = new myNode("happy");
-        mylist2.removeAfter(aimNd2);
-        mylist2.printOutList();
-
-        // Test insertAfter
-        mylist2.insertAfter(aimNd,aimNd2);
-        mylist2.printOutList();
-        myNode aimNd3 = new myNode("haha");
-        mylist2.insertAfter(aimNd3,aimNd2);
-        mylist2.printOutList();
-
-        // Test remove
-        myLinkedList<String> mylist3 = new myLinkedList<>();
-        mylist3.add("Today");
-        mylist3.add("is");
-        mylist3.add("a");
-        mylist3.add("beautiful");
-        mylist3.add("day");
-        mylist3.add("and");
-        mylist3.add("today");
-        mylist3.add("is");
-        mylist3.add("Saturday");
-        remove(mylist3,"is");
-        mylist3.printOutList();
+        // Test max
+        mylist.add(10);
+        mylist.add(8);
+        mylist.add(12);
+        mylist.add(5);
+        System.out.println("The max integer in the list is: "+ max(mylist.head));
     }
 }
