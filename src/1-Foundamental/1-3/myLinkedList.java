@@ -4,6 +4,10 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
 //    private LinkedList<myNode> myLinkedList;
     private myNode<E> head;
 
+    public myNode getHead(){
+        return head;
+    }
+
     public myLinkedList(){
         head = new myNode(null);
     }
@@ -43,6 +47,78 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
         }
     }
 
+    public static boolean find(myLinkedList list, String s){
+        myNode nd = list.getHead().getNext();
+        while(nd.getData() != null){
+            if(nd.getData().equals(s)){ // find
+                return true;
+            }
+            else{nd = nd.getNext();
+                if (nd == null){return false;} // cannot find
+            }
+        }
+        return false;
+    }
+
+    public myNode find(myNode h, myNode nd){
+        myNode temp = h.getNext();
+        while(temp.getData()!=null){
+            if (equal(temp, nd)){ // find the nd, delete the rest
+                return temp;
+            }
+            temp = temp.getNext();
+            if (temp == null){break;}
+        }
+        return null;
+    }
+
+    public static myNode findIfNext(myNode h, String e){
+        myNode<String> temp = h.getNext();
+        while(temp.getData()!=null){
+            if (temp.getNext().getData().equals(e)){ // find the nd, delete the rest
+                return temp;
+            }
+            temp = temp.getNext();
+            if (temp == null){break;}
+        }
+        return null;
+    }
+
+    public static boolean equal(myNode node, myNode aimNode){
+        if(node.getData().equals(aimNode.getData())){ // find
+            return true;
+        }
+        return false;
+    }
+
+    public void removeAfter(myNode nd){
+        myNode temp = find(head,nd);
+        if (temp != null){
+            temp.setNext(null);
+        }
+    }
+
+    public void insertAfter(myNode nodeA, myNode nodeB){
+        myNode temp = find(head, nodeA);
+        if (temp != null){
+            myNode nodeC = temp.getNext();
+            temp.setNext(nodeB);
+            nodeB.setNext(nodeC);
+        }
+    }
+
+    public static void remove(myLinkedList list, String s){
+        //TODO remove the node after nodeA, which has the key s
+        while(find(list,s)){
+            myNode<String> nodeA = findIfNext(list.head, s);
+            myNode<String> nodeB = nodeA.getNext();// contains key s
+            myNode<String> nodeC = nodeB.getNext();
+            if (nodeC!= null){
+                nodeA.setNext(nodeC);
+            }
+        }
+    }
+
     public void printOutList(){
         myNode pointer = head.getNext();
         while (pointer.getData() != null){
@@ -55,6 +131,7 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
     }
 
     public static void main(String[] args) {
+        //Test delete
         myLinkedList<Integer> mylist = new myLinkedList<>();
         mylist.add(1);
         mylist.add(2);
@@ -70,6 +147,46 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
         mylist.delete(3);
         System.out.println("After deleting the 3 ed element: ");
         mylist.printOutList();
-    }
 
+        // Test find
+        myLinkedList<String> mylist2 = new myLinkedList<>();
+        mylist2.add("I");
+        mylist2.add("am");
+        mylist2.add("perfect");
+        mylist2.add("and");
+        mylist2.add("happy");
+        System.out.println(find(mylist2,"happy"));
+        System.out.println(find(mylist2,"Happy"));
+        System.out.println(find(mylist2,"I"));
+
+        // Test removeAfter
+        mylist2.printOutList();
+        myNode aimNd = new myNode("and");
+        mylist2.removeAfter(aimNd);
+        mylist2.printOutList();
+        myNode aimNd2 = new myNode("happy");
+        mylist2.removeAfter(aimNd2);
+        mylist2.printOutList();
+
+        // Test insertAfter
+        mylist2.insertAfter(aimNd,aimNd2);
+        mylist2.printOutList();
+        myNode aimNd3 = new myNode("haha");
+        mylist2.insertAfter(aimNd3,aimNd2);
+        mylist2.printOutList();
+
+        // Test remove
+        myLinkedList<String> mylist3 = new myLinkedList<>();
+        mylist3.add("Today");
+        mylist3.add("is");
+        mylist3.add("a");
+        mylist3.add("beautiful");
+        mylist3.add("day");
+        mylist3.add("and");
+        mylist3.add("today");
+        mylist3.add("is");
+        mylist3.add("Saturday");
+        remove(mylist3,"is");
+        mylist3.printOutList();
+    }
 }

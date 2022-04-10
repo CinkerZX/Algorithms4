@@ -1,5 +1,6 @@
+import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
-import sun.misc.Queue;
+//import sun.misc.Queue;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -31,7 +32,7 @@ public class QueueClientPrintkthStdInput extends Queue<String> {
         length = i;
     }
 
-    public String kthStringFromLast() throws InterruptedException {
+    public String kthStringFromLast(){
         int i = 0;
         while(i<length-point){
             myQueue.dequeue();
@@ -40,7 +41,7 @@ public class QueueClientPrintkthStdInput extends Queue<String> {
         return myQueue.dequeue();
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args){
         QueueClientPrintkthStdInput myQ = new QueueClientPrintkthStdInput(Integer.valueOf(args[0]));
         System.out.println(myQ.kthStringFromLast());
     }

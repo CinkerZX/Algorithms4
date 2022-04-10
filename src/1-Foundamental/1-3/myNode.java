@@ -1,3 +1,4 @@
+
 public class myNode<E> {
     private E data;
     private myNode next;

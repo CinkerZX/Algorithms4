@@ -18,6 +18,14 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
         return length;
     }
 
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
     public E[] toArraylist(){
         return (E[]) myQueue.subList(0,length).toArray();
     }
@@ -36,8 +44,10 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
                 newQueue.add(i,temp);
                 i++;
             }
-            newQueue.add(length,e); // add the new element e
+            newQueue.add(i,e); // add the new element e
             myQueue = newQueue;
+            setLength(length+1);
+            setCapacity(newSize);
         }
         return true;
     }
@@ -100,12 +110,14 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
         return iter;
     }
 
-    public static void main(String[] args) throws ParseException, InterruptedException {
+    public static void main(String[] args) throws ParseException {
         ResizeArrayQueueOfStrings q = new ResizeArrayQueueOfStrings(3);
         q.add("One");
         q.add("Two");
         q.add("Now it's full. ");
         q.add("Resize. ");
+        q.add("Add the 4th one");
+        q.add("Add the 5th one");
         for (Object s : q){
             System.out.println(s);
         }
