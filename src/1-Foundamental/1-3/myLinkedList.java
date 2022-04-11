@@ -137,9 +137,32 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
         return result;
     }
 
+    public static myNode reserve(myNode first){
+        //TODO: input argument is the head of one list, reserve the list and return the new head |head| -> |1| -> |2|
+        if (first == null) return null; // Boundary case1: this node is null
+        if (first.getNext() == null) return first; // Boundary case2: there is only one node in the LinkedList
+        myNode second = first.getNext();
+        myNode rest = reserve(second); // return the end of the original list  |2| -> |1| -> null
+        second.setNext(first); // in each reversion, change the linked order |1| -> |head|
+        first.setNext(null); // |head| -> null
+        return rest;
+    }
+
     //Helpers
     public void printOutList(){
         myNode pointer = head.getNext();
+        while (pointer.getData() != null){
+            System.out.println(pointer.getData());
+            pointer= pointer.getNext();
+            if (pointer == null){
+                break;
+            }
+        }
+    }
+
+    public static void printOutList(myNode h){
+        // Input argument is the head node
+        myNode pointer = h.getNext();
         while (pointer.getData() != null){
             System.out.println(pointer.getData());
             pointer= pointer.getNext();
@@ -213,6 +236,10 @@ public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList clas
         mylist.add(8);
         mylist.add(12);
         mylist.add(5);
+        mylist.printOutList();
         System.out.println("The max integer in the list is: "+ max(mylist.head));
+
+        //Test reverse
+        printOutList(myLinkedList.reserve(mylist.head));
     }
 }
