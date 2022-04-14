@@ -5,36 +5,33 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
     //TODO: create an fixed size array class virtually, but extend it to changeable size by implement Queue.
     //TODO: Queue has add function, we just override the add function, realizing resizing function
     private ArrayList<E> myQueue;
-    private int length; // the num of elements
     private int capacity;
 
-    public ResizeArrayQueueOfStrings(int n){
-        myQueue = new ArrayList<E>(n);
-        length = 0;
-        capacity = n;
+    public ArrayList<E> getMyQueue() {
+        return myQueue;
     }
 
-    public int getLength() {
-        return length;
+    public int getLength(){
+        return myQueue.size();
+    }
+
+    public ResizeArrayQueueOfStrings(int n){
+        myQueue = new ArrayList<E>();
+        capacity = n;
     }
 
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
-    public void setLength(int length) {
-        this.length = length;
-    }
-
     public E[] toArraylist(){
-        return (E[]) myQueue.subList(0,length).toArray();
+        return (E[]) myQueue.subList(0,myQueue.size()).toArray();
     }
 
     @Override
-    public boolean add(E e) {
-        if (length<capacity){
-            myQueue.add(length,e); // add from 0 -> size-1
-            length++;
+    public boolean add(E e) { // add at the end of the array (first in first out)
+        if (myQueue.size()<capacity){
+            myQueue.add(myQueue.size(),e); // add from 0 -> size-1
         }
         else{ // already reach the capacity
             int newSize = capacity+10;
@@ -46,10 +43,27 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
             }
             newQueue.add(i,e); // add the new element e
             myQueue = newQueue;
-            setLength(length+1);
             setCapacity(newSize);
         }
         return true;
+    }
+
+    public void add_inverse(E e) { // add at the beginning of the array
+        if (myQueue.size()<capacity){
+            myQueue.add(0,e);
+        }
+        else{ // already reach the capacity
+            int newSize = capacity+10;
+            ResizeArrayQueueOfStrings<E> newQueue = new ResizeArrayQueueOfStrings(newSize); // resize
+            int i = 0;
+            for (E temp : myQueue){ // put everything in
+                newQueue.add(i,temp);
+                i++;
+            }
+            newQueue.add(0,e);
+            myQueue = newQueue;
+            setCapacity(newSize);
+        }
     }
 
     @Override
@@ -58,19 +72,23 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
     }
 
     @Override
-    public E remove() {
-        // TODO: remove the head of the queue: remove the [0]
+    public E remove() { // remove the end of the array (the head of the queue)
+        // TODO: remove the head of the queue: remove the first
+        if (this.size()!=0){
+            myQueue = this;
+        }
+        E result =myQueue.get(myQueue.size()-1);
+        myQueue.remove(myQueue.size()-1);
+        return result;
+    }
+
+    public E remove_inverse() {
+        // TODO: remove the ith of the queue
+        if (this.size()!=0){
+            myQueue = this;
+        }
         E result =myQueue.get(0);
-        if (length>1){
-            for (int i = 0; i < length-1; i++) {
-                myQueue.add(i,myQueue.get(i+1));
-            }
-            myQueue.remove(length-1); // remove the last one, cause all are moved one place forward
-            length--;
-        }
-        if (length==1){
-            length--;
-        }
+        myQueue.remove(0);
         return result;
     }
 
@@ -96,7 +114,7 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
 
             @Override // Override the original result
             public boolean hasNext(){
-                return (i < length);
+                return (i < myQueue.size());
             }
 
             @Override
@@ -112,14 +130,36 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
 
     public static void main(String[] args) throws ParseException {
         ResizeArrayQueueOfStrings q = new ResizeArrayQueueOfStrings(3);
-        q.add("One");
-        q.add("Two");
-        q.add("Now it's full. ");
-        q.add("Resize. ");
-        q.add("Add the 4th one");
-        q.add("Add the 5th one");
-        for (Object s : q){
+        q.add("1");
+        q.add("2");
+        q.add("3");
+        q.add("4");
+        q.add("5");
+        q.add("6"); // 6 -> 5 -> 4 -> 3 -> 2 -> 1
+        for (Object s : q){ // 1 2 3 4 5 6
             System.out.println(s);
         }
+        q.remove(); // 5 -> 4 -> 3 -> 2 -> 1
+        for (Object s : q){ // 1 2 3 4 5
+            System.out.println(s);
+        }
+
+        q.remove_inverse(); // 5 -> 4 -> 3 -> 2
+        for (Object s : q){ // 2 3 4 5
+            System.out.println(s);
+        }
+
+        ResizeArrayQueueOfStrings q_2 = new ResizeArrayQueueOfStrings(3);
+        q_2.add_inverse(1);
+        q_2.add_inverse(2);
+        q_2.add_inverse(3);
+        q_2.add_inverse(4);
+        q_2.add_inverse(5);
+        q_2.add_inverse(6);// 1 -> 2 -> 3 -> 4 -> 5 -> 6
+        for (Object s : q_2){ // 6 5 4 3 2 1
+            System.out.println(s);
+        }
+
+
     }
 }
