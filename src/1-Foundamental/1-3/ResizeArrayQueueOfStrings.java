@@ -15,9 +15,19 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
         return myQueue.size();
     }
 
+    public E getItem(int i){
+        // return the item located at i
+        return myQueue.get(i);
+    }
+
     public ResizeArrayQueueOfStrings(int n){
         myQueue = new ArrayList<E>();
         capacity = n;
+    }
+
+    public ResizeArrayQueueOfStrings(){
+        myQueue = new ArrayList<E>();
+        capacity = 0;
     }
 
     public void setCapacity(int capacity) {
@@ -64,6 +74,10 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
             myQueue = newQueue;
             setCapacity(newSize);
         }
+    }
+
+    public void setItem(int i, E e){
+        myQueue.set(i,e);
     }
 
     @Override
