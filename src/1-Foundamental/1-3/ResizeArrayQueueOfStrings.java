@@ -20,6 +20,11 @@ class ResizeArrayQueueOfStrings<E> extends ArrayList<E> implements Queue<E>, Ite
         return myQueue.get(i);
     }
 
+    public void removeItem(int i){
+        // remove the item located at i
+        myQueue.remove(i);
+    }
+
     public ResizeArrayQueueOfStrings(int n){
         myQueue = new ArrayList<E>();
         capacity = n;
