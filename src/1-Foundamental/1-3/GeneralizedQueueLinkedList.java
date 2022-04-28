@@ -24,8 +24,9 @@ class GeneralizedQueueLinkedList<Item> extends LinkedList<Item> implements Genra
     }
 
     @Override
-    public void insert(Item x) {
+    public boolean insert(Item x) {
         myLinkedList.addFirst(x);
+        return true;
     }
 
     @Override

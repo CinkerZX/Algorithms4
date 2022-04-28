@@ -28,8 +28,9 @@ class GeneralizedQueueArray<Item> extends ResizeArrayQueueOfStrings<Item> implem
      * @param x
      */
     @Override
-    public void insert(Item x) {
+    public boolean insert(Item x) {
         this.add(x);
+        return true;
     }
 
 
