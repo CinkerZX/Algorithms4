@@ -1,4 +1,5 @@
 import java.text.DateFormat;
+//import java.text.ParseException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,7 +30,7 @@ class myDate<E> extends ResizeArrayQueueOfStrings<E> { // Utilize the class Resi
         return dates.toArraylist();
     }
 
-    public static void main(String[] args) throws ParseException{
+    public static void main(String[] args) throws ParseException {
         Object[] dateArray = readDates();
         for (int i = 0; i < dateArray.length; i++) {
             Date temp = (Date) dateArray[i];// Concrete class

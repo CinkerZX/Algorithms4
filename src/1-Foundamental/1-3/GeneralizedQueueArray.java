@@ -1,8 +1,4 @@
-import sun.misc.Queue;
-
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Iterator;
+//import sun.misc.Queue;
 
 class GeneralizedQueueArray<Item> extends ResizeArrayQueueOfStrings<Item> implements GenralizedQueue<Item>{
     
@@ -26,6 +22,7 @@ class GeneralizedQueueArray<Item> extends ResizeArrayQueueOfStrings<Item> implem
     /**
      * Add an Item x
      * @param x
+     * @return
      */
     @Override
     public boolean insert(Item x) {

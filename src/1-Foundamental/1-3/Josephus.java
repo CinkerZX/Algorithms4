@@ -1,4 +1,6 @@
-import sun.misc.Queue;
+//import sun.misc.Queue;
+
+import edu.princeton.cs.algs4.Queue;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +28,7 @@ class Josephus<Item> extends Queue<Item> {
      *
      * @param
      */
-    public void elimiOrder() throws InterruptedException {
+    public void elimiOrder(){
         Josephus myQueue = elimiOrderHelper_ConstructOriginQueue();
         Queue<Item> result = new Queue<>();
         Item temp = null;
@@ -59,7 +61,7 @@ class Josephus<Item> extends Queue<Item> {
         return jQueue;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         Josephus j = new Josephus();
         j.setN(Integer.valueOf(args[0]));
         j.setM(Integer.valueOf(args[1]));

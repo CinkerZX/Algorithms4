@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 public class myLinkedList<E> extends LinkedList<E> { // Create myLinkedList class, function: delete the kth element if exists
-//    private LinkedList<myNode> myLinkedList;
+    //    private LinkedList<myNode> myLinkedList;
     private myNode<E> head;
 
     public myNode getHead(){

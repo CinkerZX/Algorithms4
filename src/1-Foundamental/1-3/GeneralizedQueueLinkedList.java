@@ -1,5 +1,3 @@
-import sun.misc.Queue;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -26,7 +24,7 @@ class GeneralizedQueueLinkedList<Item> extends LinkedList<Item> implements Genra
     @Override
     public boolean insert(Item x) {
         myLinkedList.addFirst(x);
-        return true;
+        return false;
     }
 
     @Override

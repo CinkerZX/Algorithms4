@@ -1,5 +1,5 @@
 
-public class myNode<E> {
+class myNode<E> {
     private E data;
     private myNode next;
     public myNode(E e){
