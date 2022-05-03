@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.Queue;
 
 import java.util.Iterator;
 
-class CopyQueue<Item> extends Queue<Item>{
+class CopyQueue<Item> extends Queue<Item> implements Iterable<Item>{
     Queue myQueue;
 
     public CopyQueue(){
@@ -42,22 +42,23 @@ class CopyQueue<Item> extends Queue<Item>{
         myQueue.enqueue(i);
     }
 
-//    @Override
-//    public Iterator<Item> iterator() {
-//        return new Iterator<Item>() {
-//            CopyQueue<Item> names = new CopyQueue(myQueue);
-//
-//            @Override
-//            public boolean hasNext() {
-//                return !names.isEmpty();
-//            }
-//
-//            @Override
-//            public Item next() {
-//                return names.dequeue();
-//            }
-//        };
-//    }
+    @Override
+    public Iterator<Item> iterator() {
+        CopyQueue<Item> names = new CopyQueue(myQueue);
+
+        return new Iterator<Item>() {
+
+            @Override
+            public boolean hasNext() {
+                return !names.myQueue.isEmpty();
+            }
+
+            @Override
+            public Item next() {
+                return (Item) names.myQueue.dequeue();
+            }
+        };
+    }
 
     public static void main(String[] args) {
         CopyQueue myCQ = new CopyQueue();

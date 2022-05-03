@@ -29,6 +29,7 @@ class Listingfiles<Item>{
     public void CollectandPrintFiles(){
         File folder = new File(path);
         File[] listOfFiles = folder.listFiles();
+        printOutFolderName(this.layer);
         for (File file : listOfFiles) {
             if (file.isFile()) { // read files
                 String i = file.getName();
@@ -40,7 +41,16 @@ class Listingfiles<Item>{
                 subFile.CollectandPrintFiles();
             }
         }
-        printOutQueue(this.layer);
+        printOutQueue(this.layer-1);
+    }
+
+    public void printOutFolderName(int i){
+        String space = " ";
+        for (int j = 1; j < i; j++) {
+            space = space+" ";
+        }
+        String folderN = space.concat(this.folderName);
+        System.out.println(folderN);
     }
 
     public void printOutQueue(int i){
@@ -48,12 +58,12 @@ class Listingfiles<Item>{
         for (int j = 1; j < i; j++) {
             space = space+" ";
         }
-        String folderN = space.concat(this.folderName);
-        System.out.println(folderN);
         if (!fileNames.myQueue.isEmpty()){
             for (Object name:fileNames.myQueue) {
                 System.out.println(space+"  "+name);
             }
+//            Iterator<Item> iter = fileNames.iterator();
+//            iter.forEachRemaining(System.out::println);
         }
     }
 
