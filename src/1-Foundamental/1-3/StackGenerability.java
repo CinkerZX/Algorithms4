@@ -13,7 +13,7 @@ class StackGenerability extends Stack implements Iterable, Set {
     public StackGenerability(LinkedList operations){
         mixedOperations = new Stack<Integer>();
         for (int i = 0; i < operations.size(); i++) {
-            mixedOperations.push((Integer) operations.get(i));
+            mixedOperations.push((Integer) operations.get(operations.size()-1-i));
         }
     }
 
@@ -50,47 +50,46 @@ class StackGenerability extends Stack implements Iterable, Set {
      * Check if a given permutation can be generated
      */
     public static boolean permutationCheck(int[] permutation){
-        //generate the operation order by the input permutation
-        LinkedList opeOrders = new LinkedList();
+        Stack<Integer> temp = new Stack<>();
+        int n = permutation.length;
+        LinkedList comparePermutation = new LinkedList();
         LinkedList permutations = intArrToLinkedList(permutation);
-        opeOrders = permutationCheckHelper(opeOrders, permutations);
-        //generate a mixedOperation, then check
-        StackGenerability recuntrrustOpe = new StackGenerability(opeOrders);
-        return recuntrrustOpe.overflowCheck();
+        LinkedList permutations2 = (LinkedList) permutations.clone(); // trap: permutations has already being empty with polling
+        int i = 0;
+        while(!permutations.isEmpty()){
+            if ((int) permutations.pollFirst() == n-1-i){
+                comparePermutation = permutationCheckHelper2(temp,comparePermutation);
+                comparePermutation.addLast(n-1-i);
+            }
+            else{
+                temp.push(n-1-i);
+            }
+            i++;
+        }
+        comparePermutation = permutationCheckHelper2(temp,comparePermutation); // trap: in the end, need to empty the stack: temp
+//        for (Object o:comparePermutation) {
+//            System.out.print(o+" ");
+//        }
+        return permutationCheckHelper(comparePermutation, permutations2);
     }
 
-    // Based on the permutation, generate the int[] that need to put into the opeOrders
-    public static LinkedList permutationCheckHelper(LinkedList opeOrder, LinkedList permutation){
-        int lenPermutaion = permutation.size();
-        int[] ope;
-        if (permutation.size() == 0){return opeOrder;}
-        while(lenPermutaion > 0){
-            if (lenPermutaion == 1){
-                ope = new int[]{-1, 1};
-                opeOrder = permutationCheckHelper2(ope, opeOrder);
-                permutation.remove();
-                return opeOrder;
-            }
-            int i = 0;
-            int temp1 = (int) permutation.pollLast();
-            int temp2 = (int) permutation.pollLast();
-            while (temp1<temp2 && permutation.size()>=1){
-                i++;
-                temp1 = temp2;
-                temp2 = (int) permutation.pollLast();
-            }
-            ope = permutationCheckHelper3(i);
-            opeOrder = permutationCheckHelper2(ope, opeOrder);
-            permutationCheckHelper(opeOrder, permutation);
+    // If the two linked list are the same, then the permutation can be generated
+    public static boolean permutationCheckHelper(LinkedList comparePermutation, LinkedList permutation){
+        while(!comparePermutation.isEmpty()) {
+            if (comparePermutation.pop() != permutation.pop()){return false;}
         }
-        return opeOrder;
+        return true;
     }
-    // Insert the operation order into the linkedlist
-    public static LinkedList permutationCheckHelper2(int[] ope, LinkedList opeOrder){
-        for (int i = 0; i < ope.length; i++) {
-            opeOrder.addFirst(ope[ope.length-1-i]);
+
+    // Empty the elements in temp, by adding them into the comparePermuation
+    public static LinkedList permutationCheckHelper2(Stack temp, LinkedList comparePermuation){
+        if (temp.isEmpty()){
+            return comparePermuation;
         }
-        return opeOrder;
+        else{
+            comparePermuation.addLast(temp.pop());
+            return permutationCheckHelper2(temp,comparePermuation);
+        }
     }
 
     @Override
@@ -109,18 +108,6 @@ class StackGenerability extends Stack implements Iterable, Set {
         };
     }
 
-    public static int[] permutationCheckHelper3(int i){
-        int[] result = new int[2*i];
-        for (int j = 0; j < i; j++) {
-            result[j] = 1;
-            result[2*i-1-j] = -1;
-        }
-        for (int s:result) {
-            System.out.println(s);
-        }
-        return result;
-    }
-
     public static LinkedList intArrToLinkedList(int[] intArr){
         LinkedList myLL = new LinkedList();
         for (int i = 0; i < intArr.length; i++) {
@@ -137,8 +124,10 @@ class StackGenerability extends Stack implements Iterable, Set {
         }
         System.out.println(myOperations.overflowCheck());
 
-        permutationCheckHelper3(3);
+        int[] mypermutation = new int[]{0,2,1,3,4};
+        System.out.println(permutationCheck(mypermutation));
 
+        int[] mypermutation2 = new int[]{3,2,0,1,4};
+        System.out.println(permutationCheck(mypermutation2));
     }
-
 }
