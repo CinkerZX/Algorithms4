@@ -11,6 +11,13 @@ class Deque<E> extends LinkedList<E> {
         rightHead.setBefore(leftHead);
     }
 
+    public Deque(myDoubleDirectNode bottom){
+        leftHead = new myDoubleDirectNode<>((E) "left");
+        rightHead = new myDoubleDirectNode<>((E)"right");
+        leftHead.setNext(bottom);
+        rightHead.setBefore(bottom);
+    }
+
     @Override
     public boolean isEmpty() {
         if (leftHead.getNext() == rightHead){return true;}
@@ -36,14 +43,6 @@ class Deque<E> extends LinkedList<E> {
         newNode.setBefore(leftHead);
         newNode.setNext(temp);
         temp.setBefore(newNode);
-//        if (temp == rightHead){
-//            rightHead.setBefore(newNode);
-//            newNode.setNext(rightHead);
-//        }
-//        else{
-//            newNode.setNext(temp);
-//            temp.setBefore(newNode);
-//        }
     }
 
     public void pushRight(E item){
@@ -54,14 +53,6 @@ class Deque<E> extends LinkedList<E> {
         newNode.setNext(rightHead);
         newNode.setBefore(temp);
         temp.setNext(newNode);
-//        if (temp == leftHead){
-//            leftHead.setNext(newNode);
-//            newNode.setBefore(rightHead);
-//        }
-//        else{
-//            newNode.setBefore(temp);
-//            temp.setNext(newNode);
-//        }
     }
 
     public E popLeft(){

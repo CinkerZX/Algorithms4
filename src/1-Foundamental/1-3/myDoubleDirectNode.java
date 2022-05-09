@@ -32,4 +32,8 @@ public class myDoubleDirectNode<E> {
     public void setBefore(myDoubleDirectNode before) {
         this.before = before;
     }
+
+    public boolean equals(myDoubleDirectNode node){
+        return data==node.getData();
+    }
 }
