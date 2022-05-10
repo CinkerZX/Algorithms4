@@ -1,4 +1,4 @@
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StackType;
+//import jdk.nashorn.internal.runtime.regexp.joni.constants.StackType;
 
 import java.util.Stack;
 
@@ -22,12 +22,25 @@ public class TwoStacksOneDeque<Item> extends Deque<Item> {
         return myDeque.rightHead.getBefore().equals(bottom);
     }
 
+    public boolean empty(){
+        return myDeque.leftHead.getNext().equals(bottom) && myDeque.rightHead.getBefore().equals(bottom);
+    }
+
     public Item peek(String s) {
         Item result;
+        if (empty()){
+            return null;
+        }
         if (s == "left"){
+            if (empty("left")){
+                return null;
+            }
             result = myDeque.popLeft();
             myDeque.pushLeft(result);
         }else{
+            if (empty("right")){
+                return null;
+            }
             result = myDeque.popRight();
             myDeque.pushRight(result);
         }
@@ -83,15 +96,6 @@ public class TwoStacksOneDeque<Item> extends Deque<Item> {
     }
 
     public static void main(String[] args) {
-        TwoStacksOneDeque myTwoStacks = new TwoStacksOneDeque();
-        myTwoStacks.empty("left");
-        System.out.println("After initialization, the left stack empty? "+myTwoStacks.empty("left")); // true
-        System.out.println("After initialization, the right stack empty? "+myTwoStacks.empty("right")); // true
 
-        myTwoStacks.push("left", "left-01");
-        myTwoStacks.push("left", "left-02");
-        myTwoStacks.empty("left");
-        System.out.println("After push left, left stack empty? "+myTwoStacks.empty("left")); //false
-        System.out.println("After push left, right stack empty? "+myTwoStacks.empty("right")); //true
     }
 }
