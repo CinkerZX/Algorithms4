@@ -2,14 +2,12 @@ import edu.princeton.cs.algs4.Stack;
 
 public class ThreeStackOneQueue<Item> extends Stack<Item> {
     // realize the functions of queue by 3 stacks
-    Stack collector;
-    Stack tempor;
-    Stack stackQueue;
+    java.util.Stack tempor;
+    java.util.Stack stackQueue;
 
     public ThreeStackOneQueue(){
-        collector = new Stack();
-        tempor = new Stack();
-        stackQueue = new Stack();
+        tempor = new java.util.Stack();
+        stackQueue = new java.util.Stack();
     }
 
     /**
@@ -18,9 +16,7 @@ public class ThreeStackOneQueue<Item> extends Stack<Item> {
      * @return
      */
     public boolean add(Item e){
-        collector.push(e);
-        tempor = emptyStackFillStack(collector,stackQueue);
-        collector.pop();
+        stackQueue.push(e);
         return true;
     }
 
@@ -28,11 +24,12 @@ public class ThreeStackOneQueue<Item> extends Stack<Item> {
         return add(e);
     }
 
-    public Stack emptyStackFillStack(Stack needEmpty, Stack needFill){
-        while(!needEmpty.isEmpty()){
-            needFill.push(needEmpty.pop());
+    public java.util.Stack emptyStackFillStack(java.util.Stack a, java.util.Stack b){
+        java.util.Stack copya = (java.util.Stack) a.clone(); // trap: the a and b cannot be the object of "temper" or "stackqueue"
+        while(!copya.isEmpty()){
+            b.push((Item)copya.pop());
         }
-        return needFill;
+        return b;
     }
 
     /**
@@ -48,15 +45,18 @@ public class ThreeStackOneQueue<Item> extends Stack<Item> {
      * @return
      */
     public Item peek(){
+        if (stackQueue.isEmpty()){
+            return null;
+        }
         Item result;
-        tempor = emptyStackFillStack(stackQueue,tempor);
+        tempor = emptyStackFillStack(stackQueue,emptyStack());
         result = (Item) tempor.peek();
         tempor = emptyStack();
         return result;
     }
 
-    public Stack emptyStack(){
-        return new Stack();
+    public java.util.Stack emptyStack(){
+        return new java.util.Stack();
     }
 
     /**
@@ -72,12 +72,13 @@ public class ThreeStackOneQueue<Item> extends Stack<Item> {
      * @return
      */
     public Item remove(){
+        if (stackQueue.isEmpty()){
+            return null;
+        }
         Item result;
-        tempor = emptyStackFillStack(stackQueue,tempor);
+        tempor = emptyStackFillStack(stackQueue,emptyStack());
         result = (Item) tempor.pop();
-        collector = emptyStackFillStack(tempor,collector);
-        stackQueue = collector;
-        collector = emptyStack();
+        stackQueue = emptyStackFillStack(tempor,emptyStack());
         return result;
     }
 }
