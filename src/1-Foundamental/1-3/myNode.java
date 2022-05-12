@@ -7,6 +7,11 @@ class myNode<E> {
         next = null;
     }
 
+    public myNode(myNode node){
+        data = (E) node.getData();
+        next = node.getNext();
+    }
+
     public E getData() {
         return data;
     }

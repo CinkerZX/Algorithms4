@@ -1,12 +1,15 @@
 import edu.princeton.cs.algs4.Stack;
 
+import java.util.Deque;
+import java.util.Queue;
+
 public class ThreeStackOneQueue<Item> extends Stack<Item> {
     // realize the functions of queue by 3 stacks
     java.util.Stack tempor;
     java.util.Stack stackQueue;
 
     public ThreeStackOneQueue(){
-        tempor = new java.util.Stack();
+        tempor = new java.util.Stack<Item>();
         stackQueue = new java.util.Stack();
     }
 

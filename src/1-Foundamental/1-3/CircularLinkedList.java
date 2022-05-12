@@ -1,11 +1,18 @@
 import java.util.LinkedList;
 
 public class CircularLinkedList<E> extends myLinkedList<E> {
-    private myNode<E> last;
+    myNode<E> last;
 
     public CircularLinkedList(){
         last = (myNode<E>) new myNode<String>("first");
         last.setNext(last);
+    }
+
+    public boolean isEmpty(){
+        if (last.getNext().getData().equals("first")){
+            return true;
+        }
+        return false;
     }
 
     public boolean add(E e){
@@ -18,11 +25,34 @@ public class CircularLinkedList<E> extends myLinkedList<E> {
 
     public myNode goToEnd(myNode node){
         //TODO: return the node before the "last"
+        if (isEmpty()){return new myNode(null);}
         myNode pointer = node;
         while(!pointer.getNext().getData().equals("first")){
             pointer = pointer.getNext();
         }
         return pointer;
+    }
+
+    public myNode goToEnd(){
+        //TODO: return the node before the "last"
+        if (isEmpty()){return new myNode(null);}
+        myNode pointer = this.last;
+        while(!pointer.getNext().getData().equals("first")){
+            pointer = pointer.getNext();
+        }
+        return pointer;
+    }
+
+    public void remove(myNode node){
+        //TODO: remove "node" from the linkedlist
+        myNode nullNode = new myNode(null);
+        if (!node.equals(null)){
+            myNode pointer = this.last;
+            while(!pointer.getNext().getData().equals(node)){
+                pointer = pointer.getNext();
+            }
+            pointer.setNext(node);
+        }
     }
 
     //Helpers

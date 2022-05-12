@@ -43,15 +43,6 @@ public class Steque<E> extends myLinkedList<E> {
         return (E)result.getData();
     }
 
-    //Helper fun
-//    public myNode goToEnd(myNode h){
-//        myNode pointer = h;
-//        while(pointer.getNext()!= null){
-//            pointer = pointer.getNext();
-//        }
-//        return pointer;
-//    }
-
     public myNode goToPenultimate(myNode h){
         myNode pointer = h;
         while(pointer.getNext().getNext()!= null){
