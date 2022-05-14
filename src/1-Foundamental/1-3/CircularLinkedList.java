@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class CircularLinkedList<E> extends myLinkedList<E> {
+public class CircularLinkedList<E> {
     myNode<E> last;
 
     public CircularLinkedList(){
@@ -18,6 +18,7 @@ public class CircularLinkedList<E> extends myLinkedList<E> {
     public boolean add(E e){
         //TODO: insert that node before node "last"
         myNode node = new myNode(e);
+        if (isEmpty()){last.setNext(node); node.setNext(last);return true;}
         goToEnd(last).setNext(node);
         node.setNext(last);
         return true;
@@ -45,13 +46,12 @@ public class CircularLinkedList<E> extends myLinkedList<E> {
 
     public void remove(myNode node){
         //TODO: remove "node" from the linkedlist
-        myNode nullNode = new myNode(null);
         if (!node.equals(null)){
             myNode pointer = this.last;
-            while(!pointer.getNext().getData().equals(node)){
+            while(!pointer.getNext().getData().equals(node.getData())){
                 pointer = pointer.getNext();
             }
-            pointer.setNext(node);
+            pointer.setNext(pointer.getNext().getNext());
         }
     }
 

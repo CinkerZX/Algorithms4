@@ -33,14 +33,15 @@ public class CatenableStack<Item> implements Catenable<CatenableStack> {
     }
 
     public Item peek(){
+        if (myStack.isEmpty()){return null;}
         Item result =  (Item) myStack.goToEnd().getData();
         return result;
     }
 
     public Item pop(){
-        Item result =  (Item) myStack.goToEnd().getData();
+        myNode result = myStack.goToEnd();
         myStack.remove(result);
-        return result;
+        return (Item) result.getData();
     }
 
     public Item push(Item item){
@@ -54,15 +55,16 @@ public class CatenableStack<Item> implements Catenable<CatenableStack> {
      * @return
      */
     public int search(Object o){
-        int position = 1;
-        myNode pointer = new myNode(myStack.goToEnd()); //topOfStack
+        myNode pointer = new myNode(myStack.last.getNext()); //topOfStack
+        if (pointer.equals(myStack.last)){return -1;}
         while(!pointer.getData().equals(o)){
             if (pointer.equals(myStack.last)){
                 return -1;
             }
             pointer = pointer.getNext();
-            position++;
         }
+        int position = 1;
+        while(!pointer.getNext().equals(myStack.last)){position++;pointer = pointer.getNext();} // find
         return position;
     }
 }
