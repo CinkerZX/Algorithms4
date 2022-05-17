@@ -1,6 +1,13 @@
+import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.Stopwatch;
+import sun.awt.image.ImageWatched;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+import static edu.princeton.cs.algs4.StdDraw.*;
 
 /**
  *  The {@code DoublingTest} class provides a client for measuring
@@ -45,17 +52,47 @@ public class DoublingTest {
     }
 
     /**
+     * Draw the plot
+     * @param X: for arrays of size 250, 500, 1000, 2000, and so forth.
+     * @param Y: the consumed time
+     * @param maxY: the scale of Y axis
+     */
+    public static void DrawPlot(LinkedList X, LinkedList Y, int maxY){
+//        setCanvasSize((int) Math.log((Double) X.peekLast()), maxY);
+        Double x;
+        Double y;
+        setXscale(Math.log((Double) X.peekFirst())-1, Math.log((Double) X.peekLast())+1);
+        setYscale((Double) Y.peekFirst()-1, (Double) Y.peekLast()+1.0);
+        while(!X.isEmpty()){
+            DrawPlotHelper(Math.log((Double) X.pollFirst()),(Double) Y.pollFirst());
+        }
+    }
+
+    public static void DrawPlotHelper(double X, double Y){
+        StdDraw.setPenRadius(0.01);
+        StdDraw.setPenColor(StdDraw.BLUE);
+        StdDraw.point(X, Y);
+    }
+
+    /**
      * Prints table of running times to call {@code ThreeSum.count()}
      * for arrays of size 250, 500, 1000, 2000, and so forth.
      *
      * @param args the command-line arguments
      */
     public static void main(String[] args) {
-        long limitTime = 60;
+        long limitTime = 6;
+        // save the x and y of points into a linked list
+        LinkedList<Double> x = new LinkedList<>();
+        LinkedList<Double> y = new LinkedList<>();
+
         for (int n = 250; true; n += n) {
             double time = timeTrial(n);
             if (time>limitTime){break;}
             StdOut.printf("%7d %7.1f\n", n, time);
+            x.add(Double.valueOf(n));
+            y.add(time);
         }
+        DrawPlot(x,y, (int) limitTime);
     }
 }
