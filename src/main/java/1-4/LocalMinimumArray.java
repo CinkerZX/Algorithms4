@@ -2,18 +2,18 @@ import java.util.LinkedList;
 
 /**
  * The {@Code LocalMinimal}
- * Read in N long distinct integers, and find A local minimum pair (a[i-1] < a[i] < a[i+1])
+ * Read in N long distinct integers, and find a local minimum pair (a[i-1] < a[i] < a[i+1])
  * take ~2logN times compares in the worst case.
  *
  * Idea: examine the middle value of a[N/2], and it's neighbor
  *       if it is local minimum, stop
  *       otherwise search in the half with the smaller neighbor
- *       Until researching search the same, or the middle is at the edge.
+ *       Until researching search the same element.
  */
 
 
-public class LocalMinimum {
-    public LocalMinimum(){} // Do nothing in the constructor
+public class LocalMinimumArray {
+    public LocalMinimumArray(){} // Do nothing in the constructor
 
     // returns true if the sorted array a[] contains any duplicated integers
     private static boolean containsDuplicates(int[] a) {
