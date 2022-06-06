@@ -35,6 +35,10 @@ public class BinarySearchwithAddSubtract {
         fibonacci.remove();
     }
 
+    public LinkedList<Integer> getFibonacci() {
+        return fibonacci;
+    }
+
     public boolean ifContain(int x){
         //TODO: determine the initial searching interval
         LinkedList<Integer> fiboCopy = (LinkedList<Integer>) fibonacci.clone();
