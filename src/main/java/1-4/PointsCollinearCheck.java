@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.ThreeSum;
+
 /**
  * The {@PointsCollinearCheck} class get the input of N distinct points (2D),
  * method findCollinearN returns the number of triples that falls on the same line.
@@ -16,11 +18,12 @@
  * If collinear, then (y2-y1)/(x2-x1) == (yi-yi)/(xi-x1), that is (b+a)^2-ab == (c+a)^2-ac
  * After simplify, we have: (b+c+2a)(b-c) == a(b-c), a+b+c == 0 (b != c, since the points are distinct, x1 != x2 != x3)
  */
-public class PointsCollinearCheck {
-    public PointsCollinearCheck(){} // Construct do nothing
+public class PointsCollinearCheck{
+    private PointsCollinearCheck(){} // Construct do nothing
 
     public static int findCollinearN(Point2D[] points){
         // TODO: calculate the num of collinear points
+        if (checkDuplicatePoints(points)){throw new IllegalArgumentException("There are duplicate points.");}
         int n = 0;
         double k;
         double r;
@@ -40,5 +43,41 @@ public class PointsCollinearCheck {
         return (p2.getY()-p1.getY())/(p2.getX()-p1.getX());
     }
 
+    public static boolean checkDuplicatePoints(Point2D[] points){
+        //TODO: check if the points are duplicated, return true if duplicated, else return false
+        for (int i = 0; i < points.length; i++) {
+            for (int j = i+1; j < points.length; j++) {
+                if (points[i].getX() == points[j].getX() && points[i].getY() == points[j].getY()){return true;}
+            }
+        }
+        return false;
+    }
 
+    public static Point2D[] TransformDoubletoPoint(int[] set){
+        Point2D[] result = new Point2D[set.length];
+        Point2D point;
+        if (ThreeSumFaster.containsDuplicates(set)){throw new IllegalArgumentException("Contains duplicate integers!");}
+        for (int i = 0; i < set.length; i++) {
+            result[i] = new Point2D(set[i],Math.pow(set[i],3));
+        }
+        return result;
+    }
+
+    public static int ThreeSumbyCollinear(int[] set){
+        return findCollinearN(TransformDoubletoPoint(set));
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
