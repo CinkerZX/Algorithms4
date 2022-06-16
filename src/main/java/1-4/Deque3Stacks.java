@@ -1,9 +1,8 @@
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.Stack;
 
 /**
- * The {@CODE DequeOneStackOneSteque} realize the functions of Deque by one stack and one Steque
+ * The {@CODE Deque3Stacks} realize the functions of Deque by one stack and one Steque
  *
  * --------------------------------------------------------------------
  * boolean addFirst(Item item)/push(Item item)    Inserts the specified element at the front of this deque
@@ -31,24 +30,37 @@ import java.util.Stack;
  * @param <Item>
  */
 
-public class DequeOneStackOneSteque<Item> implements DequeBasic<Item> {
-    private Stack stack;
-    private Steque steque; // save into steque
+public class Deque3Stacks<Item> implements DequeBasic<Item>{
+    private Stack<Item> stack1; // saved in stack1
+    private Stack<Item> stack2;
+    private Stack<Item> stack3;
 
-    public DequeOneStackOneSteque(){
-        stack = new Stack();
-        steque = new Steque(); // pop, push, enqueue, dequeue
+    public Deque3Stacks(){
+        stack1 = new Stack<>();
+        stack2 = new Stack<>();
+        stack3 = new Stack<>();
     }
+
     @Override
     public void addFirst(Item item) {
         //TODO: Inserts the specified element at the front of this deque
-        steque.addFirst(item);
+        stack1.push(item);
     }
 
     @Override
     public void addLast(Item item) {
         //TODO: Inserts the specified element at the end of this deque
-        steque.addLast(item);
+        //Idea: stack1 -> stack2, stack1.push, stack2 -> stack1
+        stack2 = transferStack1toStack2(stack1,stack2);
+        stack1.push(item);
+        stack1 = transferStack1toStack2(stack2,stack1);
+    }
+
+    public static Stack transferStack1toStack2(Stack a, Stack b){
+        while(!a.isEmpty()){
+            b.push(a.pop());
+        }
+        return b;
     }
 
     @Override
@@ -68,15 +80,21 @@ public class DequeOneStackOneSteque<Item> implements DequeBasic<Item> {
     @Override
     public Item removeFirst() {
         //TODO: Retrieves and removes the first element of this deque.
-        steque.removeFirst();
+        stack1.pop();
         return null;
     }
 
     @Override
     public Item removeLast() {
         //TODO: Retrieves and removes the last element of this deque
-        steque.removeLast();
-        return null;
+        //Idea: stack1 -> stack2, stack2 pop, stack2 -> stack1
+        Item result = null;
+        stack2 = transferStack1toStack2(stack1, stack2);
+        if (!stack2.isEmpty()){
+            result = stack2.pop();
+            stack1 = transferStack1toStack2(stack2,stack1);
+        }
+        return result;
     }
 
     @Override
@@ -93,15 +111,21 @@ public class DequeOneStackOneSteque<Item> implements DequeBasic<Item> {
     @Override
     public Item getFirst() {
         //TODO: Retrieves, but does not remove, the first element of this deque.
-        steque.getFirst();
+        stack1.peek();
         return null;
     }
 
     @Override
     public Item getLast() {
         //TODO: Retrieves, but does not remove, the last element of this deque.
-        steque.getLast();
-        return null;
+        //Idea: stack1 -> stack2, stack2.peek, stack2 -> stack1
+        Item result = null;
+        stack2 = transferStack1toStack2(stack1,stack2);
+        if (!stack2.isEmpty()){
+            result = stack2.peek();
+            stack1 = transferStack1toStack2(stack2, stack1);
+        }
+        return result;
     }
 
     @Override
@@ -117,14 +141,38 @@ public class DequeOneStackOneSteque<Item> implements DequeBasic<Item> {
     @Override
     public boolean removeFirstOccurrence(Object o) {
         //TODO: Removes the first occurrence of the specified element from this deque.
-        steque.removeFirstOccurrence(o);
+        //Idea: stack1-> stack2, check if equals, when yes, stop pop out, stack2 -> stack1
+        if(stack1.contains(o)){
+            Item temp = null;
+            while (!stack1.isEmpty() && !temp.equals(o)){
+                temp = stack1.pop();
+                stack2.push(temp);
+            }
+            if (temp.equals(o)){ // First occur
+                stack2.pop();
+                stack1 = transferStack1toStack2(stack2,stack1);
+            }// Else cannot find, do nothing
+        }
         return true;
     }
 
     @Override
     public boolean removeLastOccurrence(Object o) {
         //TODO: Removes the last occurrence of the specified element from this deque.
-        steque.removeLastOccurrence(o);
+        //Idea: stack1 -> stack2, stack2 -> stack3, check if equals, when yes, stop
+        if (stack1.contains(o)){
+            stack2 = transferStack1toStack2(stack1, stack2);
+            Item temp = null;
+            while (!stack2.isEmpty() && !temp.equals(o)){
+                temp = stack2.pop();
+                stack3.push(temp);
+            }
+            if (temp.equals(o)){ // First occur
+                stack3.pop();
+                stack2 = transferStack1toStack2(stack3,stack2);
+            }
+        }
+        stack1 = transferStack1toStack2(stack2,stack1);
         return true;
     }
 
@@ -185,28 +233,32 @@ public class DequeOneStackOneSteque<Item> implements DequeBasic<Item> {
     @Override
     public boolean contains(Object o) {
         //TODO: Returns true if this deque contains the specified element.
-        return steque.contains(o);
+        return stack1.contains(o);
     }
 
     @Override
     public int size() {
         //TODO: Returns the number of elements in this deque.
-        return steque.size();
+        return stack1.size();
     }
 
     @Override
     public Iterator<Item> iterator() {
         //TODO: Returns an iterator over the elements in this deque in proper sequence.
         //The elements will be returned in order from first (head) to last (tail).
-        steque.iterator();
-        return null;
+        Stack<Item> tempStack = (Stack<Item>) stack1.clone();
+        Iterator<Item> itr = tempStack.iterator();
+        return itr;
     }
 
     @Override
     public Iterator<Item> descendingIterator() {
         //TODO: Returns an iterator over the elements in this deque in reverse sequential order.
         // The elements will be returned in order from last (tail) to first (head).
-        steque.descendingIterator();
-        return null;
+        Stack<Item> tempStack = new Stack<>();
+        Stack<Item> tempStack1 = (Stack<Item>) stack1.clone();
+        tempStack = transferStack1toStack2(tempStack1, tempStack);
+        Iterator<Item> itr = tempStack.iterator();
+        return itr;
     }
 }
