@@ -18,6 +18,7 @@ public class QuickFindUF implements UF{
     private int[] id;
 
     public QuickFindUF(int n){
+        id = new int[n];
         for (int i = 0; i < n; i++) {
             id[i] = i;
         }
@@ -27,7 +28,7 @@ public class QuickFindUF implements UF{
     public void union(int p, int q) {
         int N = id.length;
         if (p>N || q>N || p<0 || q<0){throw new IllegalArgumentException("Both p, q should be in [0, N-1].");}
-        //TODO: update the component of p to the component of q
+        //TODO: update the component of q to the component of p
         int comOfP = id[p];
         int comOfQ = id[q];
         if (comOfP != comOfQ){

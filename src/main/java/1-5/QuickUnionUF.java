@@ -12,11 +12,12 @@
  *
  */
 public class QuickUnionUF implements UF{
-    private int[] pa;
-    private int count; // number of component
+    public int[] pa;  // Here the variables are public, so that subClass can inherit them by "extends"
+    public int count; // number of component
 
     public QuickUnionUF(int n){ // Constructor.
         //TODO: Ini pa[] = [0 1 2 .... n-1]
+        pa = new int[n];
         for (int i = 0; i < n; i++) {
             pa[i] = i;
         }
