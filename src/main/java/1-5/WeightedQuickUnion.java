@@ -4,10 +4,14 @@ import edu.princeton.cs.algs4.StdOut;
 public class WeightedQuickUnion {
     private int[] parent;
     private int[] size;
-    private int count;
+    public int count;
 
     public int[] getParent() {
         return parent;
+    }
+
+    public int[] getSize() {
+        return size;
     }
 
     public WeightedQuickUnion(int n) {
