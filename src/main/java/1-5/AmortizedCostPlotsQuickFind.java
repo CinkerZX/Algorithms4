@@ -4,11 +4,17 @@ import edu.princeton.cs.algs4.StdOut;
 import java.awt.*;
 
 /**
- * The {@Code AmortizedCostPlots} visualize the average cost of array access operations for QuickFindUF / QuickUnionUF
+ * The {@Code AmortizedCostPlotsQuickFind} visualize the average cost of array access operations for QuickFindUF
  *
  * For QuickFindUF: visualize average union function
  *
- * For QuickUnionUF: visualize average find function
+ * Idea:
+ *      a. add var 'total' to record the times of accessing id array
+ *      b. amending the union function by updating var total
+ *      c. function 'visualizeCostQuickFind' to call function 'trailExe' and visualize the amortized cost
+ *      d. function 'trailExe' executes the union operation multiple times and record 'total' in each union operation
+ *         Note: var 'total' needs to be initialized after each union operation
+ *      e. function 'visualize' is static, can be reused for class AmortizedCostPlotsQuickUnion also
  */
 public class AmortizedCostPlotsQuickFind extends QuickFindUF {
     public int total;
@@ -41,16 +47,16 @@ public class AmortizedCostPlotsQuickFind extends QuickFindUF {
         }
     }
 
-    public static void visualize(int[] eachFinal, int operationTime) { // N is the total test time
+    public static void visualize(int[] eachFinal, int operationTime, int Yscale) { // N is the total test time
         //TODO: draw eachFinal & average total Final
 //        double[] accuAverage = new double[operationTime];
         int accuFinal = 0;
         double[] x = new double[operationTime];
         StdDraw.setCanvasSize(1000,800);
         StdDraw.setXscale(-5,operationTime+5);
-        StdDraw.setYscale(-5,1300);
+        StdDraw.setYscale(-5,Yscale);
         StdDraw.line(-5,0,operationTime+5,0); // x-axis
-        StdDraw.line(0,-5,0,1300); // y-axis
+        StdDraw.line(0,-5,0,Yscale); // y-axis
         StdDraw.setPenRadius(0.01);
 
         for (int i = 0; i < operationTime; i++) {
@@ -81,7 +87,7 @@ public class AmortizedCostPlotsQuickFind extends QuickFindUF {
 
     public void visualizeCostQuickFind(int numTrails){
         int[] eachFinal = this.trailExe(numTrails);
-        this.visualize(eachFinal,numTrails);
+        visualize(eachFinal,numTrails,1300);
     }
 
     public static void main(String[] args) {
