@@ -31,7 +31,7 @@ public class RandomGridGenerator {
     }
 
     // Connection class
-    private static class Connection{
+    public static class Connection{
         int p;
         int q;
 
