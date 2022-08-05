@@ -40,8 +40,6 @@ public class WeightedQuickUnion {
         return p;
     }
 
-    /** @deprecated */
-    @Deprecated
     public boolean connected(int p, int q) {
         return this.find(p) == this.find(q);
     }

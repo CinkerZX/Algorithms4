@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 
 /**
@@ -14,14 +16,18 @@ import java.util.LinkedList;
 public class DynamicGrowth implements UF{
     private LinkedList<Integer> parent;
     private LinkedList<Integer> size;
-    public int count;
+    private int count;
 
     public LinkedList<Integer> getParent() {
-        return parent;
+        return this.parent;
     }
 
-    public LinkedList<Integer> getSize() {
+    public java.util.LinkedList<Integer> getSize() {
         return size;
+    }
+
+    public int getSize(int i) {
+        return this.getSize().get(i);
     }
 
     public DynamicGrowth(){
@@ -32,19 +38,20 @@ public class DynamicGrowth implements UF{
 
     public int newSite(){
         //TODO: return the size of the current net
-        return parent.size();
+        return this.parent.size();
     }
 
     private void updateNet(int p, int q){
         //TODO: extend the current nodes into the needed size
-        int newSize = p+Math.abs(p-q)+1; // #nodes (6)
-        int curSize = parent.size(); //2 (0,1) -> (0,1,2,3,4,5)
+        Integer[] num = {p,q};
+        int newSize = Collections.max(Arrays.asList(num))+1; // #nodes (6)
+        int curSize = this.newSite(); //2 (0,1) -> (0,1,2,3,4,5)
         if (newSize > curSize){ // need to extend
             for (int i = curSize; i < newSize; i++) {
-                parent.addLast(i);
-                size.addLast(i);
+                this.parent.addLast(i);
+                this.size.addLast(i);
             }
-            count = count+newSize-curSize;
+            this.count = this.count+newSize-curSize;
         }
     }
 
@@ -100,6 +107,6 @@ public class DynamicGrowth implements UF{
     }
 
     public static void main(String[] args) {
-
+        
     }
 }
