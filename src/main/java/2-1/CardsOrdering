@@ -1,0 +1,15 @@
+# Card ordering algorithm 2.1.13
+
+## Request
+- In order by suit and by rank within each suit;
+- Card must be laid out face down in a row
+- Only allow check the values of two cards and to exchange two cards
+
+Solution idea:
+- Use **Selection sort** first to make suits gather together
+    - Step0: n = 0;
+    - Step1: Check the suit of the card[i] and card[j]
+        - If the same, i = i+1, n++;
+            - If n == 4: i = i+1; go to Step0;
+        - If different and n<3, exchange card[j] with the last card, go to Step1
+- Inside each suit, use **Selection sort** or **Insert sort** alg to order
