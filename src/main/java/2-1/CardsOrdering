@@ -10,6 +10,32 @@ Solution idea:
     - Step0: n = 0;
     - Step1: Check the suit of the card[i] and card[j]
         - If the same, i = i+1, n++;
-            - If n == 4: i = i+1; go to Step0;
+            - If n == 3: i = i+1; go to Step0;
         - If different and n<3, exchange card[j] with the last card, go to Step1
 - Inside each suit, use **Selection sort** or **Insert sort** alg to order
+
+
+# Card ordering algorithm 2.1.14 (Deque sort)
+
+## Request
+- In order by suit and by rank within each suit;
+- Card must be laid out face down in a row
+- Only allow check the values of top two cards, exchange top two cards, move the top card to the bottom
+
+Solution idea:
+- Step0: numSuit = 4;
+- Step1: n = 0, s = 0;
+- Step2: Check the suit of the first two cards C[0] and C[1]
+    - If the same, n++;
+        + Compare the number
+            1) if C[0] > C[1]: exchange C[0] with C[1]; s=0;
+               else          : s++;
+            2) put C[0] to the end
+            3) if n == 3 && s == 3: put C[1] to the end; numSuit++;
+                    if   : numSuit == 4, break;
+                    else : go to Step1;
+            4) if n != 3: go to Step2;
+    - If different
+        - if n == 0: Exchange C[0], C[1]
+        - Put C[0] to the end
+        - go to Step1
