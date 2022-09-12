@@ -6,6 +6,7 @@ _ 0 1 2 3 4 5 6 7 8 9
 compare is cheap, but moving is expensive.
 
 Idea: put the i th at the spare place and select the smallest, out it at i
+> Use selection sort because it minimizes the number of exchanges
 
 for (i = 0; i < n ; i++)
     if (extra.isempty){
