@@ -11,15 +11,17 @@ public class AnimationInsertion {
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
-    public static void sort(Comparable[] a) {
+    public static void sort(Comparable[] a) throws InterruptedException {
         int n = a.length;
         for (int i = 1; i < n; i++) {
             for (int j = i; j > 0 && less(a[j], a[j-1]); j--) {
                 exch(a, j, j-1);
             }
             assert isSorted(a, 0, i);
+            barOfArray.show(a);
         }
         assert isSorted(a);
+        barOfArray.show(a);
     }
 
     /**
@@ -145,7 +147,7 @@ public class AnimationInsertion {
     }
 
     // print array to standard output
-    private static void show(Comparable[] a) {
+    private static void printout(Comparable[] a) {
         for (int i = 0; i < a.length; i++) {
             StdOut.println(a[i]);
         }
@@ -157,9 +159,8 @@ public class AnimationInsertion {
      *
      * @param args the command-line arguments
      */
-    public static void main(String[] args) {
-        String[] a = StdIn.readAllStrings();
-        Insertion.sort(a);
-        show(a);
+    public static void main(String[] args) throws InterruptedException {
+        Double[] a = barOfArray.arrayGenerator(50);
+        sort(a);
     }
 }
