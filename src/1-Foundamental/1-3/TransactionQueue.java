@@ -1,8 +1,10 @@
 //import edu.princeton.cs.algs4.Transaction;
 
+import edu.princeton.cs.algs4.Date;
+import edu.princeton.cs.algs4.Transaction;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 
 public class TransactionQueue extends myDate<Transaction>{ // Utilize the class myDate realizing the function of reading transactions into a queue and return an Array
@@ -27,8 +29,9 @@ public class TransactionQueue extends myDate<Transaction>{ // Utilize the class 
             String[] info = line.split(";");
             String name = info[0];
             Double amount = Double.valueOf(info[1]);
-            Date d = new SimpleDateFormat("dd/MM/yyyy").parse(info[2]);
-            Transaction trans = new Transaction(name, d, amount);
+            java.util.Date d = new SimpleDateFormat("dd/MM/yyyy").parse(info[2]);
+            edu.princeton.cs.algs4.Date dd = new Date(d.getMonth(),d.getDay(),d.getYear());
+            Transaction trans = new Transaction(name, dd, amount);
             transactions.add(trans); // concrete class
         }
         return transactions.toArraylist();
