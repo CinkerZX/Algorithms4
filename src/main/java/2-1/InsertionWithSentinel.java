@@ -1,44 +1,35 @@
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
  *  The {@code Insertion} class provides static methods for sorting an
  *  array using insertion sort.
- *  <p>
- *  In the worst case, this implementation makes ~ &frac12; <em>n</em><sup>2</sup>
- *  compares and ~ &frac12; <em>n</em><sup>2</sup> exchanges to sort an array
- *  of length <em>n</em>. So, it is not suitable for sorting large arbitrary
- *  arrays. More precisely, the number of exchanges is exactly equal to the
- *  number of inversions. So, for example, it sorts a partially-sorted array
- *  in linear time.
- *  <p>
- *  This sorting algorithm is stable.
- *  It uses &Theta;(1) extra memory (not including the input array).
- *  <p>
- *  See <a href="https://algs4.cs.princeton.edu/21elementary/InsertionPedantic.java.html">InsertionPedantic.java</a>
- *  for a version that eliminates the compiler warning.
- *  <p>
- *  For additional documentation, see <a href="https://algs4.cs.princeton.edu/21elementary">Section 2.1</a> of
- *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  *
- *  @author Robert Sedgewick
- *  @author Kevin Wayne
+ *  Idea: replace check of j>0 in the inner loop by placing the smallest item at a[0]
+ *  Performance: use SortCompare to check
+ *  This 'Sentinel' has better performance when a.length is small (smaller than 500ish),
+ *  but worse performance when a.length is large.
  */
-public class Insertion {
+public class InsertionWithSentinel extends Insertion {
 
     // This class should not be instantiated.
-    public Insertion() { }
+    private InsertionWithSentinel() {
+        super();
+    }
 
     /**
      * Rearranges the array in ascending order, using the natural order.
      * @param a the array to be sorted
      */
     public static void sort(Comparable[] a) {
+        //TODO: put the smallest item at a[0], so that the inner loop doesn't need to check j>0
         int n = a.length;
+        exch(a,smallestIndex(a),0);
         for (int i = 1; i < n; i++) {
-            for (int j = i; j > 0 && less(a[j], a[j-1]); j--) {
+            for (int j = i; less(a[j], a[j-1]); j--) {
                 exch(a, j, j-1);
             }
             assert isSorted(a, 0, i);
@@ -53,8 +44,9 @@ public class Insertion {
      * @param hi right endpoint (exclusive)
      */
     public static void sort(Comparable[] a, int lo, int hi) {
+        exch(a,smallestIndex(Arrays.copyOfRange(a, lo, hi)),lo);
         for (int i = lo + 1; i < hi; i++) {
-            for (int j = i; j > lo && less(a[j], a[j-1]); j--) {
+            for (int j = i; less(a[j], a[j-1]); j--) {
                 exch(a, j, j-1);
             }
         }
@@ -141,6 +133,15 @@ public class Insertion {
         int swap = a[i];
         a[i] = a[j];
         a[j] = swap;
+    }
+
+    // find the smallest index
+    public static int smallestIndex(Comparable[] a){
+        int smallestIndex = 0;
+        for (int i = 1; i < a.length; i++) {
+            if(less(a[i],a[smallestIndex])) smallestIndex = i;
+        }
+        return smallestIndex;
     }
 
     /***************************************************************************

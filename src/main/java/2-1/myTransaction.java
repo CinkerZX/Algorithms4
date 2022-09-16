@@ -1,6 +1,8 @@
 import edu.princeton.cs.algs4.Date;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Transaction;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -53,6 +55,12 @@ public class myTransaction implements Comparable<myTransaction>{
             throw new IllegalArgumentException("Amount cannot be NaN or infinite");
     }
 
+    public myTransaction(Transaction trans) {
+        who    = trans.who();
+        when   = trans.when();
+        amount = trans.amount();
+    }
+
     public String who() {
         return who;
     }
@@ -70,6 +78,12 @@ public class myTransaction implements Comparable<myTransaction>{
         return String.format("%-10s %10s %8.2f", who, when, amount);
     }
 
+    public static void transPrint(myTransaction[] a){
+        for (int i = 0; i < a.length; i++)
+            StdOut.println(a[i].toString());
+        StdOut.println();
+    }
+
     /**
      * Compares two myTransactions by amount.
      *
@@ -83,6 +97,7 @@ public class myTransaction implements Comparable<myTransaction>{
         return Double.compare(this.amount, t.amount);
     }
 
+    // Comparators are inner class
     /**
      * Compares two myTransactions by customer name.
      */
@@ -119,7 +134,7 @@ public class myTransaction implements Comparable<myTransaction>{
      *
      * @param args the command-line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         myTransaction[] a = new myTransaction[4];
         a[0] = new myTransaction("Turing   6/17/1990  644.08");
         a[1] = new myTransaction("Tarjan   3/26/2002 4121.85");
@@ -127,27 +142,19 @@ public class myTransaction implements Comparable<myTransaction>{
         a[3] = new myTransaction("Dijkstra 8/22/2007 2678.40");
 
         StdOut.println("Unsorted");
-        for (int i = 0; i < a.length; i++)
-            StdOut.println(a[i]);
-        StdOut.println();
+        transPrint(a);
 
         StdOut.println("Sort by date");
-        Arrays.sort(a, new myTransaction.WhenOrder());
-        for (int i = 0; i < a.length; i++)
-            StdOut.println(a[i]);
-        StdOut.println();
+        Arrays.sort(a, new myTransaction.WhenOrder()); // new a comparator
+        transPrint(a);
 
         StdOut.println("Sort by customer");
         Arrays.sort(a, new myTransaction.WhoOrder());
-        for (int i = 0; i < a.length; i++)
-            StdOut.println(a[i]);
-        StdOut.println();
+        transPrint(a);
 
         StdOut.println("Sort by amount");
         Arrays.sort(a, new myTransaction.HowMuchOrder());
-        for (int i = 0; i < a.length; i++)
-            StdOut.println(a[i]);
-        StdOut.println();
+        transPrint(a);
     }
 
 }
