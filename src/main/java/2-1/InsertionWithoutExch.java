@@ -1,5 +1,6 @@
 import edu.princeton.cs.algs4.StdOut;
 
+import javax.swing.text.html.ObjectView;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -25,23 +26,20 @@ public class InsertionWithoutExch {
      */
     public static void sort(Comparable[] a) {
         int n = a.length;
-        Comparable[] temp = new Comparable[n+1];
-        for (int i = 0; i < n; i++) {
-            temp[i] = a[i];
-        }
+        Comparable[] temp = addOnePoition(a);
         for (int i = n-1; i > 0; i--) {
-            if (less(a[i],a[i-1])){// if the a[i-1] > a[i]
-                a[i+1] = a[i-1];
-                a[i-1] = a[i];
+            if (less(temp[i],temp[i-1])){// if the a[i-1] > a[i]
+                temp[i+1] = temp[i-1];
+                temp[i-1] = temp[i];
             }
             else{
-                a[i+1] = a[i];
+                temp[i+1] = temp[i];
             }
         }
-        a = Arrays.copyOfRange(temp, 1, n+1);
+        copyTemptoArray(a,temp);
         assert isSorted(a);
     }
-/************************************************* Have not changed yet ******************************
+
     /**
      * Rearranges the subarray a[lo..hi) in ascending order, using the natural order.
      * @param a the array to be sorted
@@ -49,11 +47,18 @@ public class InsertionWithoutExch {
      * @param hi right endpoint (exclusive)
      */
     public static void sort(Comparable[] a, int lo, int hi) {
-        for (int i = lo + 1; i < hi; i++) {
-            for (int j = i; j > lo && less(a[j], a[j-1]); j--) {
-                exch(a, j, j-1);
+        int n = a.length;
+        Comparable[] temp = addOnePoition(a);
+        for (int i = hi-1; i > lo; i--) {
+            if (less(temp[i],temp[i-1])){// if the a[i-1] > a[i]
+                temp[i+1] = temp[i-1];
+                temp[i-1] = temp[i];
+            }
+            else{
+                temp[i+1] = temp[i];
             }
         }
+        copyTemptoArray(a,temp);
         assert isSorted(a, lo, hi);
     }
 
@@ -64,12 +69,17 @@ public class InsertionWithoutExch {
      */
     public static void sort(Object[] a, Comparator comparator) {
         int n = a.length;
-        for (int i = 1; i < n; i++) {
-            for (int j = i; j > 0 && less(a[j], a[j-1], comparator); j--) {
-                exch(a, j, j-1);
+        Object[] temp = addOnePoition(a);
+        for (int i = n-1; i > 0; i--) {
+            if (less(temp[i],temp[i-1], comparator)){// if the a[i-1] > a[i]
+                temp[i+1] = temp[i-1];
+                temp[i-1] = temp[i];
             }
-            assert isSorted(a, 0, i, comparator);
+            else{
+                temp[i+1] = temp[i];
+            }
         }
+        copyTemptoArray(a,temp);
         assert isSorted(a, comparator);
     }
 
@@ -81,11 +91,18 @@ public class InsertionWithoutExch {
      * @param comparator the comparator specifying the order
      */
     public static void sort(Object[] a, int lo, int hi, Comparator comparator) {
-        for (int i = lo + 1; i < hi; i++) {
-            for (int j = i; j > lo && less(a[j], a[j-1], comparator); j--) {
-                exch(a, j, j-1);
+        int n = a.length;
+        Object[] temp = addOnePoition(a);
+        for (int i = n-1; i > 0; i--) {
+            if (less(temp[i],temp[i-1], comparator)){// if the a[i-1] > a[i]
+                temp[i+1] = temp[i-1];
+                temp[i-1] = temp[i];
+            }
+            else{
+                temp[i+1] = temp[i];
             }
         }
+        a = Arrays.copyOfRange(temp, 1, n+1);
         assert isSorted(a, lo, hi, comparator);
     }
 
@@ -100,15 +117,17 @@ public class InsertionWithoutExch {
      */
     public static int[] indexSort(Comparable[] a) {
         int n = a.length;
-        int[] index = new int[n];
-        for (int i = 0; i < n; i++)
-            index[i] = i;
-
-        for (int i = 1; i < n; i++)
-            for (int j = i; j > 0 && less(a[index[j]], a[index[j-1]]); j--)
-                exch(index, j, j-1);
-
-        return index;
+        int[] temp = IndexAddOnePoition(a);
+        for (int i = n-1; i > 0; i--) {
+            if (less(temp[i],temp[i-1])){// if the a[i-1] > a[i]
+                temp[i+1] = temp[i-1];
+                temp[i-1] = temp[i];
+            }
+            else{
+                temp[i+1] = temp[i];
+            }
+        }
+        return Arrays.copyOfRange(temp, 1, n+1);
     }
 
     /***************************************************************************
@@ -125,18 +144,43 @@ public class InsertionWithoutExch {
         return comparator.compare(v, w) < 0;
     }
 
-    // exchange a[i] and a[j]
-    private static void exch(Object[] a, int i, int j) {
-        Object swap = a[i];
-        a[i] = a[j];
-        a[j] = swap;
+    // construct an array with one addition position at the end
+    private static Comparable[] addOnePoition(Comparable[] a){
+        int n = a.length;
+        Comparable[] temp = new Comparable[n+1];
+        for (int i = 0; i < n; i++) {
+            temp[i] = a[i];
+        }
+        return temp;
     }
 
-    // exchange a[i] and a[j]  (for indirect sort)
-    private static void exch(int[] a, int i, int j) {
-        int swap = a[i];
-        a[i] = a[j];
-        a[j] = swap;
+    private static Object[] addOnePoition(Object[] a){
+        int n = a.length;
+        Object[] temp = new Object[n+1];
+        for (int i = 0; i < n; i++) {
+            temp[i] = a[i];
+        }
+        return temp;
+    }
+
+    private static int[] IndexAddOnePoition(Comparable[] a){
+        int n = a.length;
+        int[] index = new int[n];
+        for (int i = 0; i < n; i++)
+            index[i] = i;
+        return index;
+    }
+
+    private static void copyTemptoArray(Comparable[] a, Comparable[] temp){
+        for (int i = 0; i < a.length; i++) {
+            a[i] = temp[i+1];
+        }
+    }
+
+    private static void copyTemptoArray(Object[] a, Object[] temp){
+        for (int i = 0; i < a.length; i++) {
+            a[i] = temp[i+1];
+        }
     }
 
     /***************************************************************************
@@ -169,5 +213,47 @@ public class InsertionWithoutExch {
         for (int i = 0; i < a.length; i++) {
             StdOut.println(a[i]);
         }
+    }
+
+    /**
+     *  % java SortCompare Insertion InsertionWithoutExch 10 100
+     *  For 10 random Doubles
+     *      Insertion is 0 times faster than InsertionWithSentinel
+     *
+     *  % java SortCompare Insertion InsertionWithoutExch 100 100
+     *  For 500 random Doubles
+     *     Insertion is 0.1 times faster than InsertionWithSentinel
+     *
+     *  % java SortCompare Insertion InsertionWithoutExch 1000 100
+     *  For 1000 random Doubles
+     *     Insertion is 0.1 times faster than InsertionWithSentinel
+     *
+     *  % java SortCompare Insertion InsertionWithoutExch 5000 100
+     *     Insertion is 0 times faster than InsertionWithSentinel
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        //************************* Test *******************************
+//        Comparable[] a = {2,3,1,5,4};
+//        InsertionWithoutExch.sort(a);
+//        show(a);
+        //**************** Compare with Insertion **********************
+        String alg1 = args[0];
+        String alg2 = args[1];
+        int n = Integer.parseInt(args[2]);
+        int trials = Integer.parseInt(args[3]);
+        double time1, time2;
+        if (args.length == 5 && args[4].equals("sorted")) {
+            time1 = SortCompare.timeSortedInput(alg1, n, trials);   // Total for alg1.
+            time2 = SortCompare.timeSortedInput(alg2, n, trials);   // Total for alg2.
+        }
+        else {
+            time1 = SortCompare.timeRandomInput(alg1, n, trials);   // Total for alg1.
+            time2 = SortCompare.timeRandomInput(alg2, n, trials);   // Total for alg2.
+        }
+
+        StdOut.printf("For %d random Doubles\n    %s is", n, alg1);
+        StdOut.printf(" %.1f times faster than %s\n", time2/time1, alg2);
     }
 }

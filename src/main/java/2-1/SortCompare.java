@@ -35,6 +35,7 @@ public class SortCompare {
         Stopwatch sw = new Stopwatch();
         if      (alg.equals("Insertion"))                  Insertion.sort(a);
         else if (alg.equals("InsertionWithSentinel"))      InsertionWithSentinel.sort(a);
+        else if (alg.equals("InsertionWithoutExch"))       InsertionWithoutExch.sort(a);
         else if (alg.equals("InsertionX"))                 InsertionX.sort(a);
         else if (alg.equals("BinaryInsertion"))            BinaryInsertion.sort(a);
         else if (alg.equals("Selection"))                  Selection.sort(a);
