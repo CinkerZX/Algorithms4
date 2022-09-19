@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -44,6 +45,35 @@ public class Insertion {
             assert isSorted(a, 0, i);
         }
         assert isSorted(a);
+    }
+
+    /**
+     * Rearranges the int array in ascending order, using the natural order.
+     * @param a the array to be sorted
+     */
+    public static void sort(int[] a) {
+        int n = a.length;
+        for (int i = 1; i < n; i++) {
+            for (int j = i; j > 0 && less(a[j], a[j-1]); j--) {
+                exch(a, j, j-1);
+            }
+        }
+    }
+
+    public static void sortInt(int[] a) {
+        int n = a.length;
+        Integer[] A = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            A[i] = a[i];
+        }
+        for (int i = 1; i < n; i++) {
+            for (int j = i; j > 0 && less(A[j], A[j-1]); j--) {
+                exch(A, j, j-1);
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            a[i] = A[i];
+        }
     }
 
     /**
@@ -176,14 +206,40 @@ public class Insertion {
     }
 
     /**
-     * Reads in a sequence of strings from standard input; insertion sorts them;
-     * and prints them to standard output in ascending order.
+     *  % java SortCompare sortint sortInt 10 100
+     *  For 10 random Doubles
+     *      sortint is 1.0 times faster than sortInt
      *
-     * @param args the command-line arguments
+     *  % java SortCompare Insertion InsertionWithoutExch 100 100
+     *  For 500 random Doubles
+     *      sortint is 1.5 times faster than sortInt
+     *
+     *  % java SortCompare Insertion InsertionWithoutExch 1000 100
+     *  For 1000 random Doubles
+     *      sortint is 0.7 times faster than sortInt
+     *
+     *  % java SortCompare Insertion InsertionWithoutExch 5000 100
+     *     sortint is 0.8 times faster than sortInt
+     *
+     * @param args
      */
     public static void main(String[] args) {
-        String[] a = StdIn.readAllStrings();
-        Insertion.sort(a);
-        show(a);
+        //**************** Compare with Insertion **********************
+        String alg1 = args[0];
+        String alg2 = args[1];
+        int n = Integer.parseInt(args[2]);
+        int trials = Integer.parseInt(args[3]);
+        double time1, time2;
+        if (args.length == 5 && args[4].equals("sorted")) {
+            time1 = SortCompare.timeSortedInput(alg1, n, trials);   // Total for alg1.
+            time2 = SortCompare.timeSortedInput(alg2, n, trials);   // Total for alg2.
+        }
+        else {
+            time1 = SortCompare.timeRandomInput(alg1, n, trials);   // Total for alg1.
+            time2 = SortCompare.timeRandomInput(alg2, n, trials);   // Total for alg2.
+        }
+
+        StdOut.printf("For %d random Doubles\n    %s is", n, alg1);
+        StdOut.printf(" %.1f times faster than %s\n", time2/time1, alg2);
     }
 }

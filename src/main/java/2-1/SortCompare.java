@@ -28,6 +28,7 @@
 import edu.princeton.cs.algs4.*;
 
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
 
 public class SortCompare {
 
@@ -36,6 +37,8 @@ public class SortCompare {
         if      (alg.equals("Insertion"))                  Insertion.sort(a);
         else if (alg.equals("InsertionWithSentinel"))      InsertionWithSentinel.sort(a);
         else if (alg.equals("InsertionWithoutExch"))       InsertionWithoutExch.sort(a);
+        else if (alg.equals("sortint"))                    Insertion.sort(convertDoubleArray(a));
+        else if (alg.equals("sortInt"))                    Insertion.sortInt(convertDoubleArray(a));
         else if (alg.equals("InsertionX"))                 InsertionX.sort(a);
         else if (alg.equals("BinaryInsertion"))            BinaryInsertion.sort(a);
         else if (alg.equals("Selection"))                  Selection.sort(a);
@@ -77,6 +80,15 @@ public class SortCompare {
             total += time(alg, a);
         }
         return total;
+    }
+
+    public static int[] convertDoubleArray(Double[] a){
+        int n = a.length;
+        int[] result = new int[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = a[i].intValue();
+        }
+        return result;
     }
 
     public static void main(String[] args) {
