@@ -72,7 +72,31 @@ public class Shell {
         assert isSorted(a);
     }
 
+    /**
+     * Rearranges the array in ascending order with the pointed sequence
+     * @param a the array to be sorted
+     * @param seq the pointed sequence
+     */
+    public static void sort(Comparable[] a, int[] seq) {
+        int n = a.length;
 
+        // 3x+1 increment sequence:  1, 4, 13, 40, 121, 364, 1093, ...
+        int lenSeq = seq.length;
+        int h;
+
+        while (lenSeq > 0) {
+            h = seq[lenSeq-1];
+            // h-sort the array
+            for (int i = h; i < n; i++) {
+                for (int j = i; j >= h && less(a[j], a[j-h]); j -= h) {
+                    exch(a, j, j-h);
+                }
+            }
+            assert isHsorted(a, h);
+            lenSeq--;
+        }
+        assert isSorted(a);
+    }
 
     /***************************************************************************
      *  Helper sorting functions.
