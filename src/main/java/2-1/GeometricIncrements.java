@@ -51,14 +51,19 @@ public class GeometricIncrements {
     public static double timeRandomInput(int[] seq, int trials)  {
         double total = 0.0;
         int n = (int) Math.pow(10,6);
-        Double[] a = new Double[n];
         // Perform one experiment (generate and sort an array).
         for (int t = 0; t < trials; t++) {
-            for (int i = 0; i < n; i++)
-                a[i] = StdRandom.uniform(0.0, 1.0);
-            total += time(seq, a);
+            total += time(seq, doublesGenerator(n));
         }
         return total;
+    }
+
+    // Generate the random sequence with length N
+    public static Double[] doublesGenerator(int N){
+        Double[] a = new Double[N];
+        for (int i = 0; i < N; i++)
+            a[i] = StdRandom.uniform(0.0, 1.0);
+        return a;
     }
 
     public static double time(int[] seq, Double[] a) {
