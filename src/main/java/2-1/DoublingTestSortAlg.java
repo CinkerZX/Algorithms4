@@ -1,5 +1,8 @@
 import edu.princeton.cs.algs4.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 /**
@@ -12,6 +15,11 @@ import java.util.Arrays;
  * ActualTime   T1      T2      T3      T4      T5      T6      T7
  * Rate         t1/T1   t2/T2   t3/T3   t4/T4   t5/T5   t6/T6   t7/T7
  *
+ * Result:
+ * 1000      	2000      	4000      	8000      	16000     	32000
+ * 0.0064    	0.0097    	0.0184    	0.076     	0.26      	1.1514
+ * 1         	4         	16        	64        	256       	1024
+ * 0.0064    	0.0025    	0.0012    	0.0012    	0.0011    	0.0012
  */
 
 
@@ -42,16 +50,16 @@ public class DoublingTestSortAlg {
      */
     public static double predictTime(int n, String alg){
         double predictTime;
-        if      (alg.equals("Insertion"))                  predictTime = n*n;
+        if      (alg.equals("Insertion"))                  predictTime = (n*n)/1000000;
 //        else if (alg.equals("InsertionWithSentinel"))      InsertionWithSentinel.sort(a);
 //        else if (alg.equals("InsertionWithoutExch"))       InsertionWithoutExch.sort(a);
 //        else if (alg.equals("sortint"))                    Insertion.sort(convertDoubleArray(a));
 //        else if (alg.equals("sortInt"))                    Insertion.sortInt(convertDoubleArray(a));
 //        else if (alg.equals("InsertionX"))                 InsertionX.sort(a);
 //        else if (alg.equals("BinaryInsertion"))            BinaryInsertion.sort(a);
-        else if (alg.equals("Selection"))                  predictTime = n*n;
+        else if (alg.equals("Selection"))                  predictTime = (n*n)/1000000;
 //        else if (alg.equals("Bubble"))          Bubble.sort(a);
-        else if (alg.equals("Shell"))                      predictTime = n*Math.log(n);
+        else if (alg.equals("Shell"))                      predictTime = (n*Math.log(n))/1000000;
 //        else if (alg.equals("Merge"))                      Shell.sort(a);
 //        else if (alg.equals("MergeX"))                     MergeX.sort(a);
 //        else if (alg.equals("MergeBU"))                    MergeBU.sort(a);
@@ -64,9 +72,37 @@ public class DoublingTestSortAlg {
         return predictTime;
     }
 
-    public static void printTable(double[] actualT, double[] predictT){
+    /**
+     * This function is for printing the results in the form of table
+     * @param arrayN
+     * @param actualT
+     * @param predictT
+     * @param rate
+     */
+    public static void printTable(int[] arrayN, double[] actualT, double[] predictT, double[] rate){
         //TODO: printout the results in good form
+        printTableHelper(arrayN);
+        printTableHelper(actualT);
+        printTableHelper(predictT);
+        printTableHelper(rate);
+    }
 
+    public static void printTableHelper(double[] array){
+        DecimalFormat df = new DecimalFormat("#.####");
+        df.setRoundingMode(RoundingMode.CEILING);
+        for (int i = 0; i < array.length; i++) {
+            System.out.format("%-10s", df.format(array[i]));
+            System.out.print("\t");
+        }
+        System.out.println("");
+    }
+
+    public static void printTableHelper(int[] array){
+        for (int i = 0; i < array.length; i++) {
+            System.out.format("%-10s", array[i]);
+            System.out.print("\t");
+        }
+        System.out.println("");
     }
 
     /**
@@ -78,10 +114,20 @@ public class DoublingTestSortAlg {
     public static void mainExp(String Alg, int numDoubling, int trails){
         double[] actualT = new double[numDoubling];
         double[] predictT = new double[numDoubling];
-//        for (int i = 0; i < ; i++) {
-//
-//        }
+        int[] arrayN = new int[numDoubling];
+        double[] rate = new double[numDoubling];
+        int n = 1000;
+        for (int i = 0; i < numDoubling; i++) {
+            actualT[i] = timeRandomInput(n,Alg, trails);
+            predictT[i] = predictTime(n,Alg);
+            arrayN[i] = n;
+            rate[i] = actualT[i]/predictT[i];
+            n = n*2;
+        }
+        printTable(arrayN,actualT,predictT, rate);
     }
 
-
+    public static void main(String[] args) {
+        mainExp("Insertion", 6, 3);
+    }
 }
