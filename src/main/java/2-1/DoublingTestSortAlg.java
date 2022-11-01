@@ -42,6 +42,22 @@ public class DoublingTestSortAlg {
         return total/trials;
     }
 
+    public static double timeRandomInput(int n, String alg, int trials, String DataDisType)  {
+        double total = 0.0;
+        Double[] testData;
+        if      (DataDisType.equals("Gaussian"))    testData = NonUniformDistributions.GaussianDisGenerator(n);
+        else if (DataDisType.equals("Poisson"))     testData = NonUniformDistributions.PoissionDisGenerator(n);
+        else if (DataDisType.equals("Geometric"))   testData = NonUniformDistributions.GeometricDisGenerator(n);
+        else if (DataDisType.equals("Discrete"))    testData = NonUniformDistributions.DiscreteDisGenerator(n);
+        else throw new IllegalArgumentException("Invalid data distribution type: " + DataDisType);
+        // Perform one experiment (generate and sort an array).
+        for (int t = 0; t < trials; t++) {
+            total += SortCompare.time(alg, testData);
+        }
+        return total/trials;
+    }
+
+
     /**
      * This function calculate the predicted time of algorithm 'alg'
      * @param n the length of double lists
@@ -87,6 +103,12 @@ public class DoublingTestSortAlg {
         printTableHelper(rate);
     }
 
+    public static void printTable(int[] arrayN, double[] actualT){
+        //TODO: printout the results in good form
+        printTableHelper(arrayN);
+        printTableHelper(actualT);
+    }
+
     public static void printTableHelper(double[] array){
         DecimalFormat df = new DecimalFormat("#.####");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -125,6 +147,26 @@ public class DoublingTestSortAlg {
             n = n*2;
         }
         printTable(arrayN,actualT,predictT, rate);
+    }
+
+    /**
+     * Run the experiment, test on test dats that obeys certain nonUniform distribution
+     * By default, test n = 1000, 2000, 4000, 8000
+     * @param Alg
+     * @param DataDisType
+     */
+    public static void mainExp(String Alg, String DataDisType){
+        int numDoubling = 5;
+        int trails = 10;
+        double[] actualT = new double[numDoubling];
+        int[] arrayN = new int[numDoubling];
+        int n = 1000;
+        for (int i = 0; i < numDoubling; i++) {
+            actualT[i] = timeRandomInput(n, Alg, trails, DataDisType);
+            arrayN[i] = n;
+            n = n*2;
+        }
+        printTable(arrayN,actualT);
     }
 
     public static void main(String[] args) {
