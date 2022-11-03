@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 /**
- * Code @{NonUniformDistribution} aims at generating test data that with special distribution for the sorting algs
+ * Code {@NonUniformDistribution} aims at generating test data that with special distribution for the sorting algs
  *
  * 1. Gaussian
  * 2. Poisson
@@ -179,13 +179,32 @@ public class NonUniformDistributions {
      * @return
      */
     public static Integer[] randomOrderInt(int n){
+        Integer[] intArray = sortedInt(n);
+        return shuffleIntArr(intArray);
+    }
+
+    /**
+     * This function is for generating an sorted array=[1,2,3,...., n]
+     * @param n
+     * @return
+     */
+    public static Integer[] sortedInt(int n){
         Integer[] intArray = new Integer[n];
         for (int i = 0; i < n; i++) {
             intArray[i] = i;
         }
-        List<Integer> intList = Arrays.asList(intArray);
+        return intArray;
+    }
+
+    /**
+     * This function is for shuffling array = [1,2,3,...., n]
+     * @param arr
+     * @return
+     */
+    public static Integer[] shuffleIntArr(Integer[] arr){
+        List<Integer> intList = Arrays.asList(arr);
         Collections.shuffle(intList);
-        return intList.toArray(intArray);
+        return intList.toArray(arr);
     }
 
     /**
