@@ -44,11 +44,14 @@ public class DoublingTestSortAlg {
 
     public static double timeRandomInput(int n, String alg, int trials, String DataDisType)  {
         double total = 0.0;
-        Double[] testData;
-        if      (DataDisType.equals("Gaussian"))    testData = NonUniformDistributions.GaussianDisGenerator(n);
-        else if (DataDisType.equals("Poisson"))     testData = NonUniformDistributions.PoissionDisGenerator(n);
-        else if (DataDisType.equals("Geometric"))   testData = NonUniformDistributions.GeometricDisGenerator(n);
-        else if (DataDisType.equals("Discrete"))    testData = NonUniformDistributions.DiscreteDisGenerator(n);
+        Comparable[] testData;
+        if      (DataDisType.equals("Gaussian"))    testData = TestSortAlgNonUniformDis.Double2Comparable(NonUniformDistributions.GaussianDisGenerator(n));
+        else if (DataDisType.equals("Poisson"))     testData = TestSortAlgNonUniformDis.Double2Comparable(NonUniformDistributions.PoissionDisGenerator(n));
+        else if (DataDisType.equals("Geometric"))   testData = TestSortAlgNonUniformDis.Double2Comparable(NonUniformDistributions.GeometricDisGenerator(n));
+        else if (DataDisType.equals("Discrete"))    testData = TestSortAlgNonUniformDis.Double2Comparable(NonUniformDistributions.DiscreteDisGenerator(n));
+        else if (DataDisType.equals("Half0Half1"))  testData = TestSortAlgNonUniformDis.int2Comparable(NonUniformDistributions.Half0Half1(n));
+        else if (DataDisType.equals("Half0HalfRestAdd1"))   testData = TestSortAlgNonUniformDis.int2Comparable(NonUniformDistributions.Half0HalfRestAdd1(n));
+        else if (DataDisType.equals("Half0HalfRandom")) testData = TestSortAlgNonUniformDis.int2Comparable(NonUniformDistributions.Half0HalfRandom(n));
         else throw new IllegalArgumentException("Invalid data distribution type: " + DataDisType);
         // Perform one experiment (generate and sort an array).
         for (int t = 0; t < trials; t++) {

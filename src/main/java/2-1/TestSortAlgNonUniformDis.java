@@ -13,46 +13,80 @@
  * ****** Data obey Gaussian distribution *****
  * Time take for Insertion:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0013    	0.0016    	0.0022    	0.0097    	0.0378
+ * 0.001     	0.0011    	0.0016    	0.0051    	0.0223
  * Time take for Selection:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0047    	0.004     	0.0147    	0.0635    	0.3064
+ * 0.0021    	0.0042    	0.0145    	0.0616    	0.2483
  * Time take for Shell:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0004    	0.0002    	0.0004    	0.0007    	0.001
+ * 0.0004    	0.0002    	0.0004    	0.0002    	0.0007
  *
  * ****** Data obey Poisson distribution *****
  * Time take for Insertion:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0005    	0.0004    	0.001     	0.0046    	0.0177
+ * 0.0005    	0.0004    	0.001     	0.0036    	0.0152
  * Time take for Selection:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0022    	0.0051    	0.0214    	0.0879    	0.3864
+ * 0.0019    	0.005     	0.0233    	0.0836    	0.3675
  * Time take for Shell:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0001    	0.0002    	0.0004    	0.0004    	0.0008
+ * 0.0002    	0.0002    	0.0004    	0.0004    	0.0007
  *
  * ****** Data obey Geometric distribution *****
  * Time take for Insertion:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0001    	0.0004    	0.0013    	0.0045    	0.0186
+ * 0         	0.0002    	0.0009    	0.0036    	0.0146
  * Time take for Selection:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0015    	0.005     	0.0236    	0.0971    	0.4167
+ * 0.0013    	0.0066    	0.0216    	0.0862    	0.3612
  * Time take for Shell:
  * 1000      	2000      	4000      	8000      	16000
- * 0         	0.0001    	0.0002    	0.0004    	0.0008
+ * 0.0001    	0         	0.0002    	0.0004    	0.0007
  *
  * ****** Data obey Discrete distribution *****
  * Time take for Insertion:
  * 1000      	2000      	4000      	8000      	16000
- * 0         	0.0004    	0.0008    	0.0033    	0.0154
+ * 0         	0         	0.0008    	0.0031    	0.0106
  * Time take for Selection:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0015    	0.0071    	0.0244    	0.0962    	0.3837
+ * 0.0014    	0.0059    	0.0241    	0.088     	0.3552
  * Time take for Shell:
  * 1000      	2000      	4000      	8000      	16000
- * 0.0001    	0         	0.0001    	0.0004    	0.0007
+ * 0         	0         	0.0002    	0.0002    	0.0005
+ *
+ * ****** Data obey Half0Half1 distribution *****
+ * Time take for Insertion:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0.0004    	0.0007    	0.0011    	0.0037    	0.014
+ * Time take for Selection:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0.0024    	0.0056    	0.0239    	0.0852    	0.3441
+ * Time take for Shell:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0.0002    	0.0002    	0.0004    	0.0004    	0.0005
+ *
+ * ****** Data obey Half0HalfRestAdd1 distribution *****
+ * Time take for Insertion:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0         	0.0004    	0.0013    	0.0049    	0.0194
+ * Time take for Selection:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0.0016    	0.0061    	0.0236    	0.0959    	0.3829
+ * Time take for Shell:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0         	0         	0.0001    	0.0002    	0.0004
+ *
+ * ****** Data obey Half0HalfRandom distribution *****
+ * Time take for Insertion:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0.0001    	0.0004    	0.0014    	0.0053    	0.022
+ * Time take for Selection:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0.0016    	0.006     	0.0234    	0.0906    	0.3668
+ * Time take for Shell:
+ * 1000      	2000      	4000      	8000      	16000
+ * 0         	0.0001    	0.0001    	0.0002    	0.0005
+ *
  */
 public class TestSortAlgNonUniformDis {
     public TestSortAlgNonUniformDis(){} // Constructor do nothing
@@ -65,9 +99,26 @@ public class TestSortAlgNonUniformDis {
         System.out.println("Time take for " + Alg + ":");
     }
 
+    public static Comparable[] int2Comparable(int[] data){
+        int n = data.length;
+        Comparable[] result = new Comparable[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = data[i];
+        }
+        return result;
+    }
+
+    public static Comparable[] Double2Comparable(Double[] data){
+        int n = data.length;
+        Comparable[] result = new Comparable[n];
+        for (int i = 0; i < n; i++) {
+            result[i] = data[i];
+        }
+        return result;
+    }
 
     public static void main(String[] args) {
-        String[] dataDisTypes = new String[]{"Gaussian", "Poisson", "Geometric", "Discrete"};
+        String[] dataDisTypes = new String[]{"Gaussian", "Poisson", "Geometric", "Discrete", "Half0Half1", "Half0HalfRestAdd1", "Half0HalfRandom"};
         String[] algs = new String[]{"Insertion", "Selection", "Shell"};
         // Gaussian
         for (int i = 0; i < dataDisTypes.length; i++) {

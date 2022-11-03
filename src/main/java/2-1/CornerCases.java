@@ -78,6 +78,13 @@ public class CornerCases {
         System.out.println();
     }
 
+    public static void show(int[] a) {
+        for (int i = 0; i < a.length; i++) {
+            StdOut.print(a[i]+"    ");
+        }
+        System.out.println();
+    }
+
     //Check the number of elements: return 1, 2 or 3
     // return 1 means the array has only one specific key
     // return 2 means the array has only two different keys

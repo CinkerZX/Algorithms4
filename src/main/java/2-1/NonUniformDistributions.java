@@ -1,7 +1,12 @@
 
 import com.sun.deploy.net.proxy.WFirefoxProxyConfig;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 /**
  * Code @{NonUniformDistribution} aims at generating test data that with special distribution for the sorting algs
@@ -10,6 +15,9 @@ import java.util.concurrent.ThreadLocalRandom;
  * 2. Poisson
  * 3. Geometric
  * 4. Discrete
+ * 5. Half 0, half 1
+ * 6. Half 0, half the remainder 1, half the remainder 2, and so forth
+ * 7. Half 0, half random int values
  */
 public class NonUniformDistributions {
     public NonUniformDistributions(){}// Constructor, do nothing
@@ -90,6 +98,55 @@ public class NonUniformDistributions {
         return data;
     }
 
+    /**
+     * This function is for generating test data in random order, with half 0, and half 1
+     * @param n
+     * @return
+     */
+    public static int[] Half0Half1(int n){
+        //TODO: generate an array data = [0,0,0,..., 1,1,1,...], and shuffle the array element by generate a random index array
+        int[] data = new int[n];
+        Integer[] intArray = randomOrderInt(n);
+        for (int i = 0; i < n/2; i++) {
+            data[intArray[i]] = 0;
+        }
+        for (int i = n/2; i < n; i++) {
+            data[intArray[i]] = 1;
+        }
+        return data;
+    }
+
+    /**
+     * This function is for generating test data in random order, with half 0, the rest of the half 1, the rest of the half 2..
+     * @param n
+     * @return
+     */
+    public static int[] Half0HalfRestAdd1(int n){
+        //TODO: generate an array data = [0,0,0,..., 1,1,1,...], and shuffle the array element by generate a random index array
+        Integer[] intArray = randomOrderInt(n);
+        int[] data = Half0HalfRestAdd1Helper(0, n, new int[n], 0);
+        return reorderArrayWithOrder(data,intArray);
+    }
+
+    /** This function is for generating test data in random order, with half 0, and the rest of the half is random int
+     *
+     * @param n
+     * @return
+     */
+    public static int[] Half0HalfRandom(int n){
+        //TODO: Construct the array, then reorder
+        int[] data = new int[n];
+        for (int i = 0; i < n/2; i++) {
+            data[i] = 0;
+        }
+        Random random = new Random();
+        for (int i = n/2; i < n; i++) {
+            data[i] = random.nextInt(100);
+        }
+        Integer[] intArray = randomOrderInt(n);
+        return reorderArrayWithOrder(data, intArray);
+    }
+
     //************* Helper functions
     public static boolean checkGaussian(double P, double X){
         ////TODO: calculate f(x), by default, assume mu = 0, var = 1
@@ -111,25 +168,81 @@ public class NonUniformDistributions {
         return P < fx;
     }
 
-
     public static double factorize(int k){
         if(k == 0){return 1;}
         else{return k*factorize(k-1);}
     }
 
+    /**
+     * This function is for generating an array composed by {1,2,3,...., n} in random order
+     * @param n
+     * @return
+     */
+    public static Integer[] randomOrderInt(int n){
+        Integer[] intArray = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            intArray[i] = i;
+        }
+        List<Integer> intList = Arrays.asList(intArray);
+        Collections.shuffle(intList);
+        return intList.toArray(intArray);
+    }
+
+    /**
+     * This function is for reorder an array with a appointed order
+     * @param original: the original array
+     * @param order: the appointed order
+     * @return
+     */
+    public static int[] reorderArrayWithOrder(int[] original, Integer[] order){
+        int n = original.length;
+        int[] reorderedArray = new int[n];
+        for (int i = 0; i < n; i++) {
+            reorderedArray[i] = original[order[i]];
+        }
+        return reorderedArray;
+    }
+
+    public static int[] Half0HalfRestAdd1Helper(int star, int numEmpty, int[] arr, int val){
+        if (numEmpty/2 != 0){
+            for (int i = star; i < star+numEmpty/2; i++) {
+                arr[i] = val;
+            }
+            star += numEmpty/2;
+            numEmpty = arr.length - star;
+            val += 1;
+            return Half0HalfRestAdd1Helper(star, numEmpty,arr,val);
+        }
+        if (numEmpty == 1){
+            arr[arr.length-1] = val;
+            return arr;
+        }
+        return arr;
+    }
+
+
+
     public static void main(String[] args) {
         Comparable[] a = NonUniformDistributions.GaussianDisGenerator(10);
         CornerCases.show(a);
 
-        a = NonUniformDistributions.PoissionDisGenerator(20);
-        CornerCases.show(a);
+//        a = NonUniformDistributions.PoissionDisGenerator(20);
+//        CornerCases.show(a);
+//
+//        a = NonUniformDistributions.GeometricDisGenerator(20);
+//        CornerCases.show(a);
+//
+//        a = NonUniformDistributions.DiscreteDisGenerator(20);
+//        CornerCases.show(a);
 
-        a = NonUniformDistributions.GeometricDisGenerator(20);
-        CornerCases.show(a);
+        int[] b;
+        b = NonUniformDistributions.Half0Half1(20);
+        CornerCases.show(b);
 
-        a = NonUniformDistributions.DiscreteDisGenerator(20);
-        CornerCases.show(a);
+        b = NonUniformDistributions.Half0HalfRestAdd1(20);
+        CornerCases.show(b);
 
-
+        b = NonUniformDistributions.Half0HalfRandom(20);
+        CornerCases.show(b);
     }
 }

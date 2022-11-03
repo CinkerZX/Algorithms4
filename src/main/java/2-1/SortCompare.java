@@ -32,13 +32,12 @@ import java.util.stream.DoubleStream;
 
 public class SortCompare {
 
-    public static double time(String alg, Double[] a) {
+    public static double time(String alg, Comparable[] a) {
         Stopwatch sw = new Stopwatch();
         if      (alg.equals("Insertion"))                  Insertion.sort(a);
         else if (alg.equals("InsertionWithSentinel"))      InsertionWithSentinel.sort(a);
         else if (alg.equals("InsertionWithoutExch"))       InsertionWithoutExch.sort(a);
-        else if (alg.equals("sortint"))                    Insertion.sort(convertDoubleArray(a));
-        else if (alg.equals("sortInt"))                    Insertion.sortInt(convertDoubleArray(a));
+        else if (alg.equals("sortint"))                    Insertion.sort(a);
         else if (alg.equals("InsertionX"))                 InsertionX.sort(a);
         else if (alg.equals("BinaryInsertion"))            BinaryInsertion.sort(a);
         else if (alg.equals("Selection"))                  Selection.sort(a);
