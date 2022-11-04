@@ -184,12 +184,20 @@ public class NonUniformDistributions {
     }
 
     /**
-     * This function is for generating an sorted array=[1,2,3,...., n]
+     * This function is for generating a sorted array=[1,2,3,...., n]
      * @param n
      * @return
      */
     public static Integer[] sortedInt(int n){
         Integer[] intArray = new Integer[n];
+        for (int i = 0; i < n; i++) {
+            intArray[i] = i;
+        }
+        return intArray;
+    }
+
+    public static Comparable[] sortedComparable(int n){
+        Comparable[] intArray = new Comparable[n];
         for (int i = 0; i < n; i++) {
             intArray[i] = i;
         }

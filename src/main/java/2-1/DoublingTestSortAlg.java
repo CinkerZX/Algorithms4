@@ -52,6 +52,9 @@ public class DoublingTestSortAlg {
         else if (DataDisType.equals("Half0Half1"))  testData = TestSortAlgNonUniformDis.int2Comparable(NonUniformDistributions.Half0Half1(n));
         else if (DataDisType.equals("Half0HalfRestAdd1"))   testData = TestSortAlgNonUniformDis.int2Comparable(NonUniformDistributions.Half0HalfRestAdd1(n));
         else if (DataDisType.equals("Half0HalfRandom")) testData = TestSortAlgNonUniformDis.int2Comparable(NonUniformDistributions.Half0HalfRandom(n));
+        else if (DataDisType.equals("formerSorted")) testData = PartiallySortedData.formerSorted(n);
+        else if (DataDisType.equals("with10PositionOrder")) testData = PartiallySortedData.with10PositionOrder(n);
+        else if (DataDisType.equals("sort5PercentRandom"))  testData = PartiallySortedData.sort5PercentRandom(n);
         else throw new IllegalArgumentException("Invalid data distribution type: " + DataDisType);
         // Perform one experiment (generate and sort an array).
         for (int t = 0; t < trials; t++) {
