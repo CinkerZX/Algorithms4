@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
-import java.util.Comparator;
+import java.util.*;
 
 /**
  *  The {@code Insertion} class provides static methods for sorting an
