@@ -6,10 +6,7 @@ public class sort {
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
         Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
         for (int k = lo; k <=hi ; k++) {
-            if (lo!=0){
-                myaux[k-myaux.length] = a[k];
-            }
-            else myaux[k] = a[k];
+            myaux[k-lo] = a[k];
         }
         // merge back to a[lo, hi]
         int i = lo, j = mid+1;
@@ -17,14 +14,14 @@ public class sort {
             if (i>mid) // a[0, 1] is sorted, and a[0] < a[1]
                 // i = k = lo = 1, aux[a[1], a[0], a[2], a[3]]
                 // a[0] = aux[1]
-                a[k] = myaux[j++];
+                a[k] = myaux[j++ - lo];
             else if (j>hi) // a[2,3] is sorted, and a[2] < a[3]
                 // j = 3, hi = 2, k = 2, i = 2, aux[a[0], a[1], a[3], a[2]];
                 // a[2] = aux[3]
-                a[k] = myaux[i++];
-            else if (less(myaux[j], myaux[i])) a[k] = myaux[j++]; // if the smallest on the right size is smaller
+                a[k] = myaux[i++ - lo];
+            else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
             else
-                a[k] = myaux[i++]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
         }
     }
 
