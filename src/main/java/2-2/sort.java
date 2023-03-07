@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class sort {
     // no constructor
     private static Comparable[] aux;
@@ -25,7 +27,8 @@ public class sort {
         }
     }
 
-    //iteration: call sort[a, lo, hi], until the smallest unit a[0, 1], a[2, 3], ...
+    //Idea: breaking big problems into small problems
+    // iteration: call sort[a, lo, hi], until the smallest unit a[0, 1], a[2, 3], ...
     public static void sortTopDown(Comparable[] a){
         //TODO: call sortTopDown
         aux = new Comparable[a.length]; //construct aux
@@ -39,7 +42,21 @@ public class sort {
         sortTopDown(a, mid+1, hi);
         //TODO: merge from the bottom to up
         merge(a, lo, mid, hi);
-        printStringArray(a);
+        printStringArray(a); // for test
+    }
+
+    // Idea: building small solutions into larger ones
+    public static void sortBottomUp(Comparable[] a){
+        //TODO: use two for loop to merge
+        int N = a.length;
+        aux = new Comparable[N]; //construct aux
+        for (int i = 1; i < N; i = i+i) { // i-- subarray size
+            for (int lo = 0; lo < N-i ; lo += i+i) {
+                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
+                printStringArray(a); // for test
+            }
+        }
+
     }
 
     //Help fun
@@ -57,14 +74,33 @@ public class sort {
         System.out.println("");
     }
 
+    public static String[] generateStringArray(int len){
+        //TODO: generate an int array with the length of len
+        String[] a = new String[len];
+        Random ran = new Random();
+        for (int i = 0; i < len; i++) {
+            a[i]= String. valueOf((char)(ran.nextInt(26) + 'a'));
+        }
+        return a;
+    }
+
     public static void main(String[] args) {
         // Test of merge
 //        String[] a = new String[]{"E", "E", "G", "M", "R", "A", "C", "E", "R", "T"};
 //        sort.merge(a, 0, 4, 9);
 
         // Test of sortTopdown
-        String[] a = new String[]{"M", "E", "R", "G", "E", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
-        sortTopDown(a);
+//        String[] a = new String[]{"M", "E", "R", "G", "E", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
+//        sortTopDown(a);
+
+        //Test of sortBottomUp
+//        sortBottomUp(a);
+
+        String[] a = sort.generateStringArray(39);
+        sort.sortBottomUp(a);
+        System.out.println("*******************");
+        sort.sortTopDown(a);
+
     }
 
 }
