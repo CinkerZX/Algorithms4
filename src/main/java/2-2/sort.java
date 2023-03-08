@@ -1,7 +1,6 @@
 import java.util.Random;
 
 public class sort {
-    // no constructor
     private static Comparable[] aux;
 
     public static void merge(Comparable[] a, int lo, int mid, int hi){
@@ -56,7 +55,6 @@ public class sort {
                 printStringArray(a); // for test
             }
         }
-
     }
 
     //Help fun
