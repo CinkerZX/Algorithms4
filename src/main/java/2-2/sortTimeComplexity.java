@@ -1,3 +1,9 @@
+import edu.princeton.cs.algs4.StdDraw;
+
+import java.awt.*;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
 public class sortTimeComplexity {
     // no constructor
     private static int ac; // ac := access time
@@ -57,6 +63,46 @@ public class sortTimeComplexity {
         }
     }
 
+    // Generate a array of function f(x), x = 1, 2, ..., n
+    public static double[] funcArrayGen(int n){
+        double[] arr = new double[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = 6*(i+1)*Math.log(i+1) / Math.log(2);
+        }
+        return arr;
+    }
+
+    // Visualize
+    public static void linePlot(int[] a, int[] b, double[] c) throws InterruptedException {
+        //TODO: Clear canvas and create canvas, visualize array a
+        StdDraw.clear();
+        int width = a.length;
+        double maxA = Arrays.stream(a).max().getAsInt();
+        double maxB = Arrays.stream(b).max().getAsInt();
+        double maxC = Arrays.stream(c).max().getAsDouble();
+        double[] max = new double[]{maxA, maxB, maxC};
+        double height = Arrays.stream(max).max().getAsDouble();
+        StdDraw.setCanvasSize(width, (int) height);
+        StdDraw.setXscale(-5,width+5);
+        StdDraw.setYscale(0,height/(6*width));
+        StdDraw.setPenRadius(0.015);
+
+        StdDraw.setPenColor(Color.gray);
+        for (int i = 0; i < width; i++) {
+            StdDraw.point(i+1,a[i]/(6*width));
+        }
+
+        StdDraw.setPenColor(Color.blue);
+        for (int i = 0; i < width; i++) {
+            StdDraw.point(i+1,b[i]/(6*width));
+        }
+
+        StdDraw.setPenColor(Color.black);
+        for (int i = 0; i < width; i++) {
+            StdDraw.point(i+1,c[i]/(6*width));
+        }
+    }
+
     private static class AC_saved{
         public static int[] ac_savedTopDown;
         public static int[] ac_savedBottomUp;
@@ -77,18 +123,31 @@ public class sortTimeComplexity {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // Test
-        String[] a = sort.generateStringArray(10);
+//        String[] a = sort.generateStringArray(10);
 //        sortTimeComplexity.sortTopDownAC(a);
-        sortTimeComplexity.sortBottomUpAC(a);
-        System.out.println(ac);
+//      //sortTimeComplexity.sortBottomUpAC(a);
+//        System.out.println(ac);
 
-        a = sort.generateStringArray(5);
+//        a = sort.generateStringArray(5);
 //        sortTimeComplexity.sortTopDownAC(a);
-        sortTimeComplexity.sortBottomUpAC(a);
-        System.out.println(ac);
+//        sortTimeComplexity.sortBottomUpAC(a);
+//        System.out.println(ac);
 
+          // Test
+//        AC_saved.runExperiment(10);
+//        int[] bu = AC_saved.ac_savedBottomUp;
+//        int[] td = AC_saved.ac_savedTopDown;
+//        System.out.println(Arrays.toString(bu));
+//        // [0, 8, 22, 38, 54, 74, 96, 116, 148, 166]
+//        System.out.println(Arrays.toString(td));
+//        // [0, 10, 24, 36, 56, 76, 92, 106, 140, 154]
+        AC_saved.runExperiment(10);
+        int[] bu = AC_saved.ac_savedBottomUp;
+        int[] td = AC_saved.ac_savedTopDown;
+        double[] upperbound = funcArrayGen(10);
+        linePlot(td, bu, upperbound);
 
     }
 
