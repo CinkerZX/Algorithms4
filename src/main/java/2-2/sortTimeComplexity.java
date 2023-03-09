@@ -82,24 +82,25 @@ public class sortTimeComplexity {
         double maxC = Arrays.stream(c).max().getAsDouble();
         double[] max = new double[]{maxA, maxB, maxC};
         double height = Arrays.stream(max).max().getAsDouble();
-        StdDraw.setCanvasSize(width, (int) height);
-        StdDraw.setXscale(-5,width+5);
-        StdDraw.setYscale(0,height/(6*width));
-        StdDraw.setPenRadius(0.015);
 
-        StdDraw.setPenColor(Color.gray);
+        StdDraw.setCanvasSize(300, 280);
+        StdDraw.setXscale(-5,5*width+5);
+        StdDraw.setYscale(-1,height/(3*width)+1);
+        StdDraw.setPenRadius(0.005);
+
+        StdDraw.setPenColor(Color.red);
         for (int i = 0; i < width; i++) {
-            StdDraw.point(i+1,a[i]/(6*width));
+            StdDraw.point(5*(i+1),a[i]/(3*width));
         }
 
         StdDraw.setPenColor(Color.blue);
         for (int i = 0; i < width; i++) {
-            StdDraw.point(i+1,b[i]/(6*width));
+            StdDraw.point(5*(i+1),b[i]/(3*width));
         }
 
         StdDraw.setPenColor(Color.black);
         for (int i = 0; i < width; i++) {
-            StdDraw.point(i+1,c[i]/(6*width));
+            StdDraw.point(5*(i+1),c[i]/(3*width));
         }
     }
 
@@ -143,10 +144,12 @@ public class sortTimeComplexity {
 //        // [0, 8, 22, 38, 54, 74, 96, 116, 148, 166]
 //        System.out.println(Arrays.toString(td));
 //        // [0, 10, 24, 36, 56, 76, 92, 106, 140, 154]
-        AC_saved.runExperiment(10);
+        AC_saved.runExperiment(512);
         int[] bu = AC_saved.ac_savedBottomUp;
+        System.out.println(Arrays.toString(bu));
         int[] td = AC_saved.ac_savedTopDown;
-        double[] upperbound = funcArrayGen(10);
+        System.out.println(Arrays.toString(td));
+        double[] upperbound = funcArrayGen(512);
         linePlot(td, bu, upperbound);
 
     }
