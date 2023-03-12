@@ -61,3 +61,25 @@ Example：
 | A B C D E F   | A B C  D  E S |   |   | A B C D E F   | S A B C  D  E|
 
 Final output: | A B C D E F   | A B C  D  E S | is not proper
+
+# 2.2.7
+The idea of merge sort is to merge sorted arrat A and B,
+by selecting the smallest at the head of A and B, and assigning sorted outcome.
+
+A _1_ _2_ ... _n_
+B _1_ _2_ ... _n_
+
+compare A_1_ with B_1_, who is smaller, who is assigned to outcome, and move its point to the next one
+Hence, the time complexity of mergeSort is O(N), which means that the number of compares is monotonically increasing.
+
+
+# 2.2.8
+Proof:
+C(N) := #Compares to sort array of length N
+lgN <= C(N) <= 2C(N/2) + N
+Let N = 2^n
+n <= C(N)
+2(n-1) <= 2C(N/2) <= ...
+Since a<b means a < the minimum of b, C(N) <= N + 2(n-1) + 2(n-2) + .... + 2*1 = N+2lgN
+Since lgN<N
+The time complexity is linear.
