@@ -26,6 +26,28 @@ public class sort {
         }
     }
 
+    public static void amendedMerge(Comparable[] a, int lo, int mid, int hi){
+        //Todo: merge array a[lo, mid] and a[mid+1, hi]
+        Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
+        for (int k = lo; k <(hi+lo+1)/2 ; k++) {
+            myaux[k-lo] = a[k];
+        }
+        for (int k = hi; k >=(hi+lo+1)/2 ; k--) {
+            myaux[(3*hi+lo+1)/2-k-lo] = a[k];
+        }
+        // merge back to a[lo, hi]
+        int i = lo, j = mid+1;
+        for (int k = lo; k <= hi ; k++) {
+            if (i>mid)
+                a[k] = myaux[j++ - lo];
+            else if (j>hi)
+                a[k] = myaux[i++ - lo];
+            else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
+            else
+                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+        }
+    }
+
     //Idea: breaking big problems into small problems
     // iteration: call sort[a, lo, hi], until the smallest unit a[0, 1], a[2, 3], ...
     public static void sortTopDown(Comparable[] a){
@@ -51,7 +73,8 @@ public class sort {
         aux = new Comparable[N]; //construct aux
         for (int i = 1; i < N; i = i+i) { // i-- subarray size
             for (int lo = 0; lo < N-i ; lo += i+i) {
-                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
+//                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
+                amendedMerge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1));
                 printStringArray(a); // for test
             }
         }
@@ -94,11 +117,8 @@ public class sort {
         //Test of sortBottomUp
 //        sortBottomUp(a);
 
-        String[] a = sort.generateStringArray(39);
+        String[] a = sort.generateStringArray(10);
         sort.sortBottomUp(a);
-        System.out.println("*******************");
-        sort.sortTopDown(a);
-
     }
 
 }
