@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class sort {
-    private static Comparable[] aux;
+//    private static Comparable[] aux;
 
     public static void merge(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
@@ -26,25 +26,31 @@ public class sort {
         }
     }
 
-    public static void amendedMerge(Comparable[] a, int lo, int mid, int hi){
+    public static void fasterMerge(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
-        Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
-        for (int k = lo; k <(hi+lo+1)/2 ; k++) {
-            myaux[k-lo] = a[k];
+        Comparable[] aux = new Comparable[hi-lo+1]; // copy a[lo, hi] to aux[]
+        for (int k = lo; k <=hi ; k++) {
+            aux[k-lo] = a[k];
         }
+        Comparable[] myaux = new Comparable[(hi-lo+1)/2]; // copy a[hi, mid+1] to myaux[]
         for (int k = hi; k >=(hi+lo+1)/2 ; k--) {
             myaux[(3*hi+lo+1)/2-k-lo] = a[k];
         }
-        // merge back to a[lo, hi]
-        int i = lo, j = mid+1;
+        // merge myaux back to a[lo, hi]
+        int i = 0, j = 0;
         for (int k = lo; k <= hi ; k++) {
-            if (i>mid)
-                a[k] = myaux[j++ - lo];
-            else if (j>hi)
-                a[k] = myaux[i++ - lo];
-            else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
-            else
-                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+            if (less(myaux[j],aux[i])) { // aux[i]>myaux[j]: move myaux[end:j] to the head of a
+                for (int l = k; l < k+hi-j+1; l++) {
+                    a[l] = myaux[myaux.length-1-l];
+                }
+                k = k+hi-j+1;
+                j=0;
+                a[k] = aux[i++];
+            }
+            else{
+                a[k] = aux[i++];
+                j++;
+            }
         }
     }
 
@@ -52,7 +58,6 @@ public class sort {
     // iteration: call sort[a, lo, hi], until the smallest unit a[0, 1], a[2, 3], ...
     public static void sortTopDown(Comparable[] a){
         //TODO: call sortTopDown
-        aux = new Comparable[a.length]; //construct aux
         sortTopDown(a, 0, a.length-1);
     }
     public static void sortTopDown(Comparable[] a, int lo, int hi){
@@ -70,11 +75,10 @@ public class sort {
     public static void sortBottomUp(Comparable[] a){
         //TODO: use two for loop to merge
         int N = a.length;
-        aux = new Comparable[N]; //construct aux
         for (int i = 1; i < N; i = i+i) { // i-- subarray size
             for (int lo = 0; lo < N-i ; lo += i+i) {
 //                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
-                amendedMerge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1));
+                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1));
                 printStringArray(a); // for test
             }
         }
