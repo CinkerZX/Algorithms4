@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class sort {
@@ -28,30 +30,44 @@ public class sort {
 
     public static void fasterMerge(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
-        Comparable[] aux = new Comparable[hi-lo+1]; // copy a[lo, hi] to aux[]
-        for (int k = lo; k <=hi ; k++) {
-            aux[k-lo] = a[k];
+        LinkedList<Comparable> aux = new LinkedList<>();
+        for (int k = lo; k <= mid ; k++) {
+            aux.add(a[k]);
         }
-        Comparable[] myaux = new Comparable[(hi-lo+1)/2]; // copy a[hi, mid+1] to myaux[]
-        for (int k = hi; k >=(hi+lo+1)/2 ; k--) {
-            myaux[(3*hi+lo+1)/2-k-lo] = a[k];
+        LinkedList<Comparable> myaux = new LinkedList<>();
+        for (int k = 0; k < (hi-lo+1)/2 ; k++) {
+            myaux.add(a[hi-k]);
         }
-        // merge myaux back to a[lo, hi]
-        int i = 0, j = 0;
-        for (int k = lo; k <= hi ; k++) {
-            if (less(myaux[j],aux[i])) { // aux[i]>myaux[j]: move myaux[end:j] to the head of a
-                for (int l = k; l < k+hi-j+1; l++) {
-                    a[l] = myaux[myaux.length-1-l];
+        LinkedList<Comparable> orderResult = new LinkedList<>();
+        // merge myaux[End, mid+1] back to a[lo, hi]
+        int j = 0;
+        while (orderResult.size() <= hi) {
+            if (myaux.size()==0){// add the rest of aux to orderResult
+                while(aux.size()!=0){orderResult.addLast(aux.removeFirst());}
+                break;
+            }
+            if (aux.size()==0){// add the rest of myaux to orderResult
+                while(myaux.size()!=0){
+                    orderResult.addLast(myaux.remove());
                 }
-                k = k+hi-j+1;
-                j=0;
-                a[k] = aux[i++];
+                break;
+            }
+            if (less(myaux.get(j),aux.getFirst())){// aux[i]>myaux[j]: move myaux[end:j] to the head of a
+                int sizeMyaux = myaux.size();
+                for (int i = 0; i < sizeMyaux-j; i++) { orderResult.addLast(myaux.removeLast());}
+                orderResult.addLast(aux.removeFirst());
+                j = 0;
             }
             else{
-                a[k] = aux[i++];
-                j++;
+                if (j==myaux.size()-1){ // aux[0] is the smallest one
+                    orderResult.addLast(aux.removeFirst());
+                }else{j++;}
             }
         }
+        for (int i = lo; i <= hi; i++) {
+            a[i] = orderResult.remove(); //remove orderResult[0], [1], ....[end]
+        }
+        printStringArray(a);
     }
 
     //Idea: breaking big problems into small problems
@@ -77,8 +93,7 @@ public class sort {
         int N = a.length;
         for (int i = 1; i < N; i = i+i) { // i-- subarray size
             for (int lo = 0; lo < N-i ; lo += i+i) {
-//                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
-                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1));
+                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
                 printStringArray(a); // for test
             }
         }
@@ -121,8 +136,9 @@ public class sort {
         //Test of sortBottomUp
 //        sortBottomUp(a);
 
-        String[] a = sort.generateStringArray(10);
-        sort.sortBottomUp(a);
+        //Test of fasterMerge
+        String[] a = new String[]{"M", "R", "T", "W", "E", "J", "L", "P"};
+        fasterMerge(a, 0, 3, 7);
     }
 
 }
