@@ -28,6 +28,7 @@ public class sort {
         }
     }
 
+    // Idea: compare a[lo : mid] with a[End : mid+1], to reduce compare times
     public static void fasterMerge(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
         LinkedList<Comparable> aux = new LinkedList<>();
@@ -48,7 +49,7 @@ public class sort {
             }
             if (aux.size()==0){// add the rest of myaux to orderResult
                 while(myaux.size()!=0){
-                    orderResult.addLast(myaux.remove());
+                    orderResult.addLast(myaux.removeLast());
                 }
                 break;
             }
@@ -68,6 +69,54 @@ public class sort {
             a[i] = orderResult.remove(); //remove orderResult[0], [1], ....[end]
         }
         printStringArray(a);
+    }
+
+    // Idea: when the length of the array is small, use Insertion sort alg, which performs better
+    public static void mergeInsert(Comparable[] a, int lo, int mid, int hi){
+        int threshold = 15;
+        if (a.length < threshold){
+            Insertion.sort(a);
+        }
+        else{
+            //Todo: merge array a[lo, mid] and a[mid+1, hi]
+            Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
+            for (int k = lo; k <=hi ; k++) {
+                myaux[k-lo] = a[k];
+            }
+            // merge back to a[lo, hi]
+            int i = lo, j = mid+1;
+            for (int k = lo; k <= hi ; k++) {
+                if (i>mid)
+                    a[k] = myaux[j++ - lo];
+                else if (j>hi)
+                    a[k] = myaux[i++ - lo];
+                else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
+                else
+                    a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+            }
+        }
+    }
+
+    // Idea: check if a[mid] <= a[mid + 1], if already in order, don't need to compare
+    public static void mergeCheckOrder(Comparable[] a, int lo, int mid, int hi){
+        if (less(a[mid+1], a[mid])){
+            //Todo: merge array a[lo, mid] and a[mid+1, hi]
+            Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
+            for (int k = lo; k <=hi ; k++) {
+                myaux[k-lo] = a[k];
+            }
+            // merge back to a[lo, hi]
+            int i = lo, j = mid+1;
+            for (int k = lo; k <= hi ; k++) {
+                if (i>mid)
+                    a[k] = myaux[j++ - lo];
+                else if (j>hi)
+                    a[k] = myaux[i++ - lo];
+                else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
+                else
+                    a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+            }
+        }
     }
 
     //Idea: breaking big problems into small problems
@@ -126,19 +175,24 @@ public class sort {
 
     public static void main(String[] args) {
         // Test of merge
-//        String[] a = new String[]{"E", "E", "G", "M", "R", "A", "C", "E", "R", "T"};
-//        sort.merge(a, 0, 4, 9);
+        String[] a = new String[]{"E", "E", "G", "M", "R", "A", "C", "E", "R", "T"};
+        sort.merge(a, 0, 4, 9);
 
         // Test of sortTopdown
-//        String[] a = new String[]{"M", "E", "R", "G", "E", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
-//        sortTopDown(a);
+        a = new String[]{"M", "E", "R", "G", "E", "S", "O", "R", "T", "E", "X", "A", "M", "P", "L", "E"};
+        sortTopDown(a);
 
-        //Test of sortBottomUp
-//        sortBottomUp(a);
+        // Test of sortBottomUp
+        a = generateStringArray(10);
+        sortBottomUp(a);
 
-        //Test of fasterMerge
-        String[] a = new String[]{"M", "R", "T", "W", "E", "J", "L", "P"};
+        // Test of fasterMerge
+        a = new String[]{"M", "R", "T", "W", "E", "J", "L", "P"};
         fasterMerge(a, 0, 3, 7);
+
+        a = new String[]{"E", "E", "G", "M", "R", "A", "C", "E", "R", "T"};
+        fasterMerge(a, 0, 4, 9);
+
     }
 
 }
