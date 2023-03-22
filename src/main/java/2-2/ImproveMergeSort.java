@@ -63,31 +63,48 @@ public class ImproveMergeSort {
 
 
     // Idea: Eliminate the copy to the auxiliary
-    // given array => sort => sorted auxiliary array
+    public static void ImpSortBottomUpNoCopy(Comparable[] a){
+        //TODO: use two for loop to merge
+        int N = a.length;
+        for (int i = 1; i < N; i = i+i) { // i-- subarray size
+            for (int lo = 0; lo < N-i ; lo += i+i) {
+                mergeNoAux(a, mergeNoAux(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1))); // hi -- the mid+i, if it out of index, hi = N-1
+            }
+        }
+    }
 
-    // sorted auxiliary array => sort => given array
+    // given array => sorted array
+    public static void mergeNoAux(Comparable[] a, Comparable[] sortedAux){
+        //Todo: copy sortedAux into a[]
+        for (int i = 0; i < a.length; i++) {
+            a[i] = sortedAux[i];
+        }
+    }
 
-    public static void mergeNoAux(Comparable[] a, int lo, int mid, int hi){
+    // sort a, put the result into myaux
+    public static Comparable[] mergeNoAux(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
-//        Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
-//        for (int k = lo; k <=hi ; k++) {
-//            myaux[k-lo] = a[k];
-//        }
-        // merge back to a[lo, hi]
-//        int i = lo, j = mid+1;
-//        for (int k = lo; k <= hi ; k++) {
-//            if (i>mid) // a[0, 1] is sorted, and a[0] < a[1]
-//                // i = k = lo = 1, aux[a[1], a[0], a[2], a[3]]
-//                // a[0] = aux[1]
-//                a[k] = myaux[j++ - lo];
-//            else if (j>hi) // a[2,3] is sorted, and a[2] < a[3]
-//                // j = 3, hi = 2, k = 2, i = 2, aux[a[0], a[1], a[3], a[2]];
-//                // a[2] = aux[3]
-//                a[k] = myaux[i++ - lo];
-//            else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
-//            else
-//                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
-//        }
+        Comparable[] sortedAux = new Comparable[a.length];
+        int i = lo, j = mid+1;
+        for (int k = 0; k <= hi ; k++) {
+            if (i==mid){ // a[li, mid] is cleaned
+                sortedAux[k] = a[j++];
+            }
+            else {
+                if (j==hi){ // a[mid+1, hi] is cleaned
+                    sortedAux[k] = a[i++];
+                }
+                else{
+                    if(sort.less(a[j],a[i])){
+                        sortedAux[k] = a[j++];
+                    }
+                    else{
+                        sortedAux[k] = a[i++];
+                    }
+                }
+            }
+        }
+        return(sortedAux);
     }
 
     public static void main(String[] args) {
