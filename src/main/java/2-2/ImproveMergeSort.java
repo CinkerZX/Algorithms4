@@ -137,6 +137,10 @@ public class ImproveMergeSort {
         sort.printStringArray(a);
         ImpSortBottomUpNoCopy(a);
         sort.printStringArray(a);
+
+        a = sort.generateStringArray(10);
+        ImpSortBottomUpNoCopy(a);
+        sort.printStringArray(a);
     }
 
 }
