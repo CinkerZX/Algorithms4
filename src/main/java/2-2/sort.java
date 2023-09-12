@@ -150,7 +150,7 @@ public class sort {
 
     //Help fun
     public static boolean less(Comparable a, Comparable b) {
-        if (a.compareTo(b)<0)
+        if (a.compareTo(b)<0) // a<b
             return true;
         else
             return false;

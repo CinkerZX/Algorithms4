@@ -95,7 +95,23 @@ public class ImproveMergeSort {
         return(sortedAux);
     }
 
-    //****************** Amend3 Combine Merge with Insertion *******************
+    //****************** Amend3 Test whether is already in order *******************
+    public static void removeRedundantOrderingMerge(Comparable[] a){
+        //TODO: call sortTopDown
+        removeRedundantOrderingMerge(a, 0, a.length-1);
+    }
+    public static void removeRedundantOrderingMerge(Comparable[] a, int lo, int hi){
+        //TODO: sort from the Top to Bottom
+        if (hi <=lo) return;
+        int mid = lo + (hi-lo)/2;
+        ImpSortTopDownInsert(a, lo, mid);
+        ImpSortTopDownInsert(a, mid+1, hi);
+        //TODO: merge from the bottom to up
+        if (!sort.less(a[mid], a[mid+1])){ // a[mid] >= a[mid+1]
+            sort.mergeInsert(a, lo, mid, hi);
+        }
+    }
+
 
     public static void main(String[] args) {
         // Test of Amend1
@@ -131,16 +147,17 @@ public class ImproveMergeSort {
 //        sort.printStringArray(a);
 
         // Test of ImpSortBottomUpNoCopy
-        String[] a = new String[]{"F", "E", "A"};
-        System.out.println("Check ImpSortBottomUpNoCopy");
-//        a = sort.generateStringArray(5);
-        sort.printStringArray(a);
-        ImpSortBottomUpNoCopy(a);
-        sort.printStringArray(a);
+//        String[] a = new String[]{"F", "E", "A"};
+//        System.out.println("Check ImpSortBottomUpNoCopy");
+//        sort.printStringArray(a);
+//        ImpSortBottomUpNoCopy(a);
+//        sort.printStringArray(a);
 
-        a = sort.generateStringArray(10);
+        // Test of removeRedundantOrderingMerge
+        String[] a = sort.generateStringArray(10);
+        System.out.println("Check removeRedundantOrderingMerge");
+        sort.printStringArray(a);
         ImpSortBottomUpNoCopy(a);
         sort.printStringArray(a);
     }
-
 }

@@ -47,6 +47,18 @@ public class Insertion {
         assert isSorted(a);
     }
 
+    public static Comparable[] sortReturn(Comparable[] a) {
+        int n = a.length;
+        for (int i = 1; i < n; i++) {
+            for (int j = i; j > 0 && less(a[j], a[j-1]); j--) {
+                exch(a, j, j-1);
+            }
+            assert isSorted(a, 0, i);
+        }
+        assert isSorted(a);
+        return a;
+    }
+
     /**
      * Rearranges the int array in ascending order, using the natural order.
      * @param a the array to be sorted
