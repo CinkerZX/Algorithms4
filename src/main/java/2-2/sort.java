@@ -4,7 +4,6 @@ import java.util.Random;
 
 public class sort {
 //    private static Comparable[] aux;
-
     public static void merge(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
         Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
