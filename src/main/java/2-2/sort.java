@@ -1,3 +1,4 @@
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -168,6 +169,16 @@ public class sort {
         Random ran = new Random();
         for (int i = 0; i < len; i++) {
             a[i]= String. valueOf((char)(ran.nextInt(26) + 'a'));
+        }
+        return a;
+    }
+
+    public static ArrayDeque generateStingQueue(int len){
+        //TODO: generate an int array with the length of len
+        ArrayDeque<Comparable> a = new ArrayDeque(len);
+        Random ran = new Random();
+        while(a.size()<len){
+            a.add(String.valueOf((char)(ran.nextInt(26) + 'a')));
         }
         return a;
     }
