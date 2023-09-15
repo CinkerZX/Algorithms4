@@ -8,41 +8,39 @@ import java.util.Deque;
 
 public class MergingSortedQueue {
 
-    public static ArrayDeque<Comparable> MergingSortedQueue(ArrayDeque<Comparable> queueA, ArrayDeque<Comparable> queueB){
+    public static ArrayDeque<Comparable> mergeSortedQueue(ArrayDeque<Comparable> queueA, ArrayDeque<Comparable> queueB){
         // TODO: merge ordered queueA and ordered queueB into result (quequeA: 5, 3, 1, queueB: 6, 4, 2)
         int lenA = queueA.size();
         int lenB = queueB.size();
         int lenResult = lenA+lenB;
         ArrayDeque<Comparable> result = new ArrayDeque<>(lenResult);
+        ArrayDeque<Comparable> queueACopy = queueA.clone();
+        ArrayDeque<Comparable> queueBCopy = queueB.clone();
 
         // compare e1 and e2, save into result
-        if (sort.less(queueA.getLast(), queueB.getFirst())){
+        if (sort.less(queueACopy.getLast(), queueBCopy.getFirst())){
             // the largest of queueA is smaller than the smallest in queueB
-            copyQueue(queueA, result);
-            copyQueue(queueB, result);
+            copyQueue(queueACopy, result);
+            copyQueue(queueBCopy, result);
         }
-        else if (sort.less(queueB.getLast(), queueA.getFirst())){
+        else if (sort.less(queueBCopy.getLast(), queueACopy.getFirst())){
             // the largest of queueB is smaller than the smallest in queueA
-            copyQueue(queueB, result);
-            copyQueue(queueA, result);
+            copyQueue(queueBCopy, result);
+            copyQueue(queueACopy, result);
         }
         else{ // need to compare
-            Comparable a;
-            Comparable b;
-            while (!queueA.isEmpty() & !queueB.isEmpty()){
-                a = queueA.pollFirst();
-                b = queueB.pollFirst();
-                if (sort.less(a, b)){
-                    result.add(a);
-                    queueB.addFirst(b);
+            while (!queueACopy.isEmpty() & !queueBCopy.isEmpty()){
+                if (sort.less(queueACopy.getFirst(), queueBCopy.getFirst())){
+                    result.add(queueACopy.pollFirst());
                 }
+                else{result.add(queueBCopy.pollFirst());}
             }
             if (result.size() != lenResult){ // either queueA has some elements left, or queueB has some left
-                if (queueA.isEmpty()){
-                    copyQueue(queueA,result);
+                if (queueACopy.isEmpty()){
+                    copyQueue(queueBCopy,result);
                 }
                 else{
-                    copyQueue(queueB,result);
+                    copyQueue(queueACopy,result);
                 }
             }
         }
@@ -51,7 +49,6 @@ public class MergingSortedQueue {
 
     public static void queueSort(ArrayDeque<Comparable> q){
         ArrayDeque<Comparable> aux = new ArrayDeque<>(q.size());
-        ArrayDeque<Comparable> aux2 = new ArrayDeque<>(q.size());
         Comparable e = q.pollFirst();
         aux.add(e);
         Comparable l;
@@ -60,9 +57,10 @@ public class MergingSortedQueue {
             e = q.pollFirst();
             l = aux.getLast();
             r = aux.getFirst();
-            if (sort.less(e, r)){aux.addFirst(e);}
-            else if (sort.less(l, e)){aux.addLast(e);}
+            if (sort.less(e, r) || e.equals(r)){aux.addFirst(e);}
+            else if (sort.less(l, e) || e.equals(l)){aux.addLast(e);}
             else{
+                ArrayDeque<Comparable> aux2 = new ArrayDeque<>(q.size());
                 while(sort.less(r,e) & sort.less(e,l)){
                     aux2.add(aux.pollFirst());
                     r = aux.getFirst();
@@ -72,15 +70,16 @@ public class MergingSortedQueue {
                 aux = aux2.clone();
             }
         }
-        q = aux.clone();
+        copyQueue(aux,q);
     }
 
     //help function
     public static void copyQueue(ArrayDeque queueFrom, ArrayDeque queueTo){
         //TODO: copy queueFrom into queueTo
+        ArrayDeque queueFromCopy = queueFrom.clone();
         try{
-            while(!queueFrom.isEmpty()){
-                queueTo.add(queueFrom.pollFirst());
+            while(!queueFromCopy.isEmpty()){
+                queueTo.add(queueFromCopy.pollFirst());
             }
         }catch (Exception e){
             System.out.println("The size of destination queue is smaller than that of original queue");
@@ -90,7 +89,7 @@ public class MergingSortedQueue {
     public static void printQueue(ArrayDeque q){
         System.out.println("The elements in the array: ");
         ArrayDeque<Comparable> aux = q.clone();
-        while(aux.size()>0){
+        while(!aux.isEmpty()){
             System.out.print(aux.pollFirst()+"  ");
         }
         System.out.println("");
@@ -98,9 +97,23 @@ public class MergingSortedQueue {
 
 
     public static void main(String[] args) {
-        ArrayDeque a = sort.generateStingQueue(5);
-        printQueue(a);
-        queueSort(a);
-        printQueue(a);
+        // Test sort queue
+//        ArrayDeque a = new ArrayDeque(4);
+//        a.add("z");
+//        a.add("b");
+//        a.add("c");
+//        a.add("z");
+//        queueSort(a);
+//        printQueue(a);
+
+        // Test merge
+        ArrayDeque b = sort.generateStingQueue(3);
+        queueSort(b);
+        printQueue(b);
+        ArrayDeque c = sort.generateStingQueue(5);
+        queueSort(c);
+        printQueue(c);
+        printQueue(mergeSortedQueue(b,c));
+        printQueue(mergeSortedQueue(c,b));
     }
 }
