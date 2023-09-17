@@ -163,12 +163,27 @@ public class sort {
         System.out.println("");
     }
 
+    public static void printStringLinkedList(LinkedList<Comparable> a){
+        while (!a.isEmpty()){System.out.print(a.pollFirst()+"     ");}
+        System.out.println("");
+    }
+
     public static String[] generateStringArray(int len){
         //TODO: generate an int array with the length of len
         String[] a = new String[len];
         Random ran = new Random();
         for (int i = 0; i < len; i++) {
             a[i]= String. valueOf((char)(ran.nextInt(26) + 'a'));
+        }
+        return a;
+    }
+
+    public static LinkedList<Comparable> generateStringLinkedList(int len){
+        //TODO: generate an int array with the length of len
+        LinkedList<Comparable> a = new LinkedList<Comparable>();
+        Random ran = new Random();
+        for (int i = 0; i < len; i++) {
+            a.add(String. valueOf((char)(ran.nextInt(26) + 'a')));
         }
         return a;
     }
