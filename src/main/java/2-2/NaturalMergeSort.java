@@ -22,8 +22,8 @@ public class NaturalMergeSort {
 //        ArrayDeque<Comparable> queueQ = ComArray2ArrayQueue(a);
         LinkedList<Comparable> queueQ = (LinkedList<Comparable>) a.clone();
         LinkedList<Comparable> orderedArray1 = new LinkedList<>();
-        orderedArray1.add(a.pollFirst());
-        findSortedArray(a,orderedArray1);
+        orderedArray1.add(queueQ.pollFirst());
+        findSortedArray(queueQ,orderedArray1);
         LinkedList<Comparable> orderedArray2 = new LinkedList<>();
         NaturalMergeSort(orderedArray1,orderedArray2, queueQ, a);
     }
@@ -104,6 +104,7 @@ public class NaturalMergeSort {
     public static LinkedList<Comparable> ArrayQueue2ComArray(LinkedList<Comparable> queue, LinkedList<Comparable> resultArray){
         //TODO: convert ArrayQueue to an array, and return the array
         LinkedList<Comparable> queueCopy = (LinkedList<Comparable>) queue.clone();
+        resultArray.clear();
         while (!queueCopy.isEmpty()){
             resultArray.add(queueCopy.pollFirst());
         }
@@ -121,17 +122,15 @@ public class NaturalMergeSort {
     }
 
     public static void main(String[] args) {
-//        Comparable[] a = sort.generateStringArray(5);
-//        sort.printStringArray(a);
-//        NaturalMergeSort(a);
-//        sort.printStringArray(a);
+        Comparable[] a = sort.generateStringArray(5);
+        sort.printStringArray(a);
+        NaturalMergeSort(a);
+        sort.printStringArray(a);
 
         LinkedList<Comparable> b = sort.generateStringLinkedList(5);
         sort.printStringLinkedList(b);
         NaturalMergeSort(b);
         sort.printStringLinkedList(b);
-        // v     s     d     m     a
-        //s     d     m     a     a     d     m     s     v     v     Need to debug
 
     }
 }

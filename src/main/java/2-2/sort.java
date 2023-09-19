@@ -164,7 +164,8 @@ public class sort {
     }
 
     public static void printStringLinkedList(LinkedList<Comparable> a){
-        while (!a.isEmpty()){System.out.print(a.pollFirst()+"     ");}
+        LinkedList<Comparable> aCopy = (LinkedList<Comparable>) a.clone();
+        while (!aCopy.isEmpty()){System.out.print(aCopy.pollFirst()+"     ");}
         System.out.println("");
     }
 
