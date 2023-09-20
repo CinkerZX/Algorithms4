@@ -133,8 +133,10 @@ public class sort {
         sortTopDown(a, mid+1, hi);
         //TODO: merge from the bottom to up
         merge(a, lo, mid, hi);
-        printStringArray(a); // for test
+//        printStringArray(a); // for test
     }
+
+
 
     // Idea: building small solutions into larger ones
     public static void sortBottomUp(Comparable[] a){
