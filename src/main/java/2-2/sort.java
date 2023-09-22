@@ -165,7 +165,7 @@ public class sort {
         System.out.println("");
     }
 
-    public static void printIntArray(int[] a){
+    public static void printIntArray(Integer[] a){
         for (int i = 0; i < a.length; i++) {
             System.out.print(a[i]+"     ");
         }
