@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.In;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,33 +24,37 @@ public class IndirectSort {
     // lo, mid, hi are the index of perm
     public static void mergeCalInversion(Comparable[] a, int lo, int mid, int hi){
         //Todo: sort the index of a
-        int[] myaux = new int[hi-lo+1]; //copy perm[] to aux[]
+        Integer[] myaux = new Integer[hi-lo+1]; //copy perm[] to aux[]
         for (int k = lo; k <=hi ; k++) {
             myaux[k-lo] = perm[k];
         }
 
-//        Integer[] array = {1,2,3,4,5,6};
-//        Arrays.asList(array).indexOf(4);
-
-
         // merge back to a[lo, hi]
-        int i = lo, j = mid+1;
-        int indexOfPerm;
+        int i = Arrays.asList(myaux).indexOf(lo), j = Arrays.asList(myaux).indexOf(mid+1);
         for (int k = lo; k <= hi ; k++) {
-            indexOfPerm = myauxList.indexOf(k);
-            if (i>mid)
+            int indexOfPerm = Arrays.asList(myaux).indexOf(k)+lo;
+//            if (myaux[i]>mid){
+            if(i == -1 || i>mid){
 //                a[k] = myaux[j++ - lo];
-                perm[k] = myaux[j++ - lo];
-            else if (j>hi)
-//                a[k] = myaux[i++ - lo];
-                perm[k] = myaux[i++ - lo];
-            else if (sort.less(a[myaux[j-lo]], a[myaux[i-lo]])){
-//                a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
-                perm[k] = myaux[j++ - lo];
+                perm[indexOfPerm] = myaux[j];
+                j = Arrays.asList(myaux).indexOf(myaux[j]+1);
             }
-            else
+//            else if (myaux[j]>hi){
+            else if (j == -1 || j > hi){
+//                a[k] = myaux[i++ - lo];
+                perm[indexOfPerm] = myaux[i];
+                i = Arrays.asList(myaux).indexOf(myaux[i]+1);
+            }
+            else if (sort.less(a[Arrays.asList(myaux).indexOf(myaux[j])], a[Arrays.asList(myaux).indexOf(myaux[i])])){  //***********
+//                a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
+                perm[indexOfPerm] = myaux[j];
+                j = Arrays.asList(myaux).indexOf(myaux[j]+1);
+            }
+            else {
 //                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
-                perm[k] = myaux[i++ - lo];
+                perm[indexOfPerm] = myaux[i];
+                i = Arrays.asList(myaux).indexOf(myaux[i]+1);
+            }
         }
     }
 
@@ -68,10 +74,12 @@ public class IndirectSort {
     }
 
     public static void main(String[] args) {
-        Comparable[] a = new Comparable[]{"e", "c", "d"};
+        Comparable[] a = new Comparable[]{"e", "c", "d", "c"};
         sort.printStringArray(a);
         IndirectSort(a);
         System.out.println("The ordered index is: ");
         sort.printIntArray(perm);
+//        Integer[] x = new Integer[]{1,2,3};
+//        System.out.println(Arrays.asList(x).indexOf(1));
     }
 }
