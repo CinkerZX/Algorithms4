@@ -30,25 +30,30 @@ public class IndirectSort {
         }
 
         // merge back to a[lo, hi]
-        int i = Arrays.asList(myaux).indexOf(lo), j = Arrays.asList(myaux).indexOf(mid+1);
+        int indexOfPerm;
+        int i = Arrays.asList(myaux).indexOf(lo), j = Arrays.asList(myaux).indexOf(mid+1); // i, j are the index of aux
         for (int k = lo; k <= hi ; k++) {
-            int indexOfPerm = Arrays.asList(myaux).indexOf(k)+lo;
+            indexOfPerm = Arrays.asList(myaux).indexOf(k)+lo;
 //            if (myaux[i]>mid){
-            if(i == -1 || i>mid){
+            if(i == -1 || myaux[i]>mid){
 //                a[k] = myaux[j++ - lo];
                 perm[indexOfPerm] = myaux[j];
                 j = Arrays.asList(myaux).indexOf(myaux[j]+1);
             }
 //            else if (myaux[j]>hi){
-            else if (j == -1 || j > hi){
+            else if (j == -1 || myaux[j] > hi){
 //                a[k] = myaux[i++ - lo];
                 perm[indexOfPerm] = myaux[i];
                 i = Arrays.asList(myaux).indexOf(myaux[i]+1);
             }
-            else if (sort.less(a[Arrays.asList(myaux).indexOf(myaux[j])], a[Arrays.asList(myaux).indexOf(myaux[i])])){  //***********
+//            else if (sort.less(a[Arrays.asList(myaux).indexOf(myaux[j])], a[Arrays.asList(myaux).indexOf(myaux[i])])){
+            else if (sort.less(a[j+lo], a[i])){  //***********
 //                a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
+//                int temp = perm[indexOfPerm];
                 perm[indexOfPerm] = myaux[j];
+//                perm[j+lo] = temp;
                 j = Arrays.asList(myaux).indexOf(myaux[j]+1);
+//                k++;
             }
             else {
 //                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
@@ -74,7 +79,7 @@ public class IndirectSort {
     }
 
     public static void main(String[] args) {
-        Comparable[] a = new Comparable[]{"e", "c", "d", "c"};
+        Comparable[] a = new Comparable[]{"e", "c", "d","c"};
         sort.printStringArray(a);
         IndirectSort(a);
         System.out.println("The ordered index is: ");
