@@ -28,37 +28,30 @@ public class IndirectSort {
         for (int k = lo; k <=hi ; k++) {
             myaux[k-lo] = perm[k];
         }
-
         // merge back to a[lo, hi]
-        int indexOfPerm;
         int i = Arrays.asList(myaux).indexOf(lo), j = Arrays.asList(myaux).indexOf(mid+1); // i, j are the index of aux
+        int indexOfPerm;
         for (int k = lo; k <= hi ; k++) {
+            sort.printIntArray(perm);
             indexOfPerm = Arrays.asList(myaux).indexOf(k)+lo;
-//            if (myaux[i]>mid){
-            if(i == -1 || myaux[i]>mid){
-//                a[k] = myaux[j++ - lo];
+            if (i == -1){
                 perm[indexOfPerm] = myaux[j];
                 j = Arrays.asList(myaux).indexOf(myaux[j]+1);
             }
-//            else if (myaux[j]>hi){
-            else if (j == -1 || myaux[j] > hi){
-//                a[k] = myaux[i++ - lo];
+            else if (j == -1 || myaux[j]>hi){
                 perm[indexOfPerm] = myaux[i];
                 i = Arrays.asList(myaux).indexOf(myaux[i]+1);
             }
-//            else if (sort.less(a[Arrays.asList(myaux).indexOf(myaux[j])], a[Arrays.asList(myaux).indexOf(myaux[i])])){
-            else if (sort.less(a[j+lo], a[i])){  //***********
-//                a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
-//                int temp = perm[indexOfPerm];
+            else if (sort.less(a[j+lo], a[i])){
                 perm[indexOfPerm] = myaux[j];
-//                perm[j+lo] = temp;
-                j = Arrays.asList(myaux).indexOf(myaux[j]+1);
-//                k++;
+                j = Arrays.asList(myaux).indexOf(myaux[j]+1); // *******
+                if(j!= -1){i = Arrays.asList(myaux).indexOf(perm[indexOfPerm]);}
             }
             else {
-//                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
                 perm[indexOfPerm] = myaux[i];
-                i = Arrays.asList(myaux).indexOf(myaux[i]+1);
+                i = Arrays.asList(myaux).indexOf(myaux[i] + 1);
+                if(i == j){i = Arrays.asList(myaux).indexOf(myaux[i]-1);
+                    System.out.println("k: "+ indexOfPerm); } //***********
             }
         }
     }
