@@ -34,24 +34,35 @@ public class IndirectSort {
         for (int k = lo; k <= hi ; k++) {
             sort.printIntArray(perm);
             indexOfPerm = Arrays.asList(myaux).indexOf(k)+lo;
-            if (i == -1){
-                perm[indexOfPerm] = myaux[j];
-                j = Arrays.asList(myaux).indexOf(myaux[j]+1);
-            }
-            else if (j == -1 || myaux[j]>hi){
-                perm[indexOfPerm] = myaux[i];
-                i = Arrays.asList(myaux).indexOf(myaux[i]+1);
-            }
-            else if (sort.less(a[j+lo], a[i])){
-                perm[indexOfPerm] = myaux[j];
-                j = Arrays.asList(myaux).indexOf(myaux[j]+1); // *******
-                if(j!= -1){i = Arrays.asList(myaux).indexOf(perm[indexOfPerm]);}
-            }
-            else {
-                perm[indexOfPerm] = myaux[i];
-                i = Arrays.asList(myaux).indexOf(myaux[i] + 1);
-                if(i == j){i = Arrays.asList(myaux).indexOf(myaux[i]-1);
-                    System.out.println("k: "+ indexOfPerm); } //***********
+            if (indexOfPerm != -1){
+//                if(j !=-1 & j+lo < indexOfPerm){
+//                    perm[indexOfPerm] = myaux[i];
+//                }
+                if (i == -1 || myaux[i]>mid){
+                    System.out.println("Now the indexOfPerm is: "+indexOfPerm + "and j is "+j);
+                    if(j==-1){
+                        perm[indexOfPerm]=myaux[i];
+                    }
+                    else{
+                        perm[indexOfPerm] = myaux[j];
+                        j = Arrays.asList(myaux).indexOf(myaux[j]+1);
+                    }
+                }
+                else if (j == -1){
+                    perm[indexOfPerm] = myaux[i];
+                    i = Arrays.asList(myaux).indexOf(myaux[i]+1);
+                }
+                else if (sort.less(a[j+lo], a[i+lo])){
+                    perm[i+lo] = myaux[j];
+                    if(j != -1 & indexOfPerm>j+lo){
+                        k--;
+                    }
+                    j = Arrays.asList(myaux).indexOf(myaux[j]+1);
+                }
+                else {
+                    perm[indexOfPerm] = myaux[i];
+                    i = Arrays.asList(myaux).indexOf(myaux[i] + 1);
+                }
             }
         }
     }
@@ -72,7 +83,7 @@ public class IndirectSort {
     }
 
     public static void main(String[] args) {
-        Comparable[] a = new Comparable[]{"e", "c", "d","c"};
+        Comparable[] a = new Comparable[]{"e", "c", "d","d"};
         sort.printStringArray(a);
         IndirectSort(a);
         System.out.println("The ordered index is: ");
