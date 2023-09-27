@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -136,8 +137,6 @@ public class sort {
 //        printStringArray(a); // for test
     }
 
-
-
     // Idea: building small solutions into larger ones
     public static void sortBottomUp(Comparable[] a){
         //TODO: use two for loop to merge
@@ -207,6 +206,18 @@ public class sort {
             a.add(String.valueOf((char)(ran.nextInt(26) + 'a')));
         }
         return a;
+    }
+
+    public static <T> T[] concatenate(T[] a, T[] b) {
+        int aLen = a.length;
+        int bLen = b.length;
+
+        @SuppressWarnings("unchecked")
+        T[] c = (T[]) Array.newInstance(a.getClass().getComponentType(), aLen + bLen);
+        System.arraycopy(a, 0, c, 0, aLen);
+        System.arraycopy(b, 0, c, aLen, bLen);
+
+        return c;
     }
 
     public static void main(String[] args) {
