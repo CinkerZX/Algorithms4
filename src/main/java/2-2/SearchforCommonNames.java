@@ -15,16 +15,17 @@ public class SearchforCommonNames {
     public static String SearchforCommonNames(Comparable[] nameList1, Comparable[] nameList2, Comparable[] nameList3){
         sort.sortTopDown(nameList1);
         sort.sortTopDown(nameList2);
-        MergingSortedQueue.copyQueue(mergeSortedArrays(nameList1,nameList2), commonNameList);
-        // *************************
-        if (commonNameList.size()>0){
+        commonNameList = mergeSortedArrays(nameList1,nameList2);
+        if (commonNameList.size()>0){ // If there are common names between nameList1 and nameList2
             String[] stockArr = new String[commonNameList.size()];
             stockArr = commonNameList.toArray(stockArr);
             sort.sortTopDown(nameList3);
-            MergingSortedQueue.copyQueue(mergeSortedArrays(nameList3,stockArr), commonNameList);
+            commonNameList = mergeSortedArrays(nameList3,stockArr); // Get the common names
         }
-
-
+        // TODO: get the first occurred common name
+        if (commonNameList.size()!=0){
+            firstCommonName = commonNameList.getLast();
+        }
         return firstCommonName;
     }
 
@@ -50,39 +51,55 @@ public class SearchforCommonNames {
     public static ArrayDeque<String> mergeSortedArrays(Comparable[] a, Comparable[] b){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
         int lo = 0;
-        int mid = a.length;
+        int mid = a.length-1;
         Comparable[] result = sort.concatenate(a, b);
-        int hi = result.length;
-        Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
-        for (int k = lo; k <=hi ; k++) {
-            myaux[k-lo] = result[k];
+        int hi = result.length-1;
+        Comparable[] myaux = new Comparable[hi+1]; //copy a[lo, hi] to myaux[]
+        for (int k = 0; k < result.length ; k++) {
+            myaux[k] = result[k];
         }
         ArrayDeque<String> commonNames = new ArrayDeque<>();
         // merge back to result[lo, hi]
         int i = lo, j = mid+1;
         for (int k = lo; k <= hi ; k++) {
             if (i>mid)
-                result[k] = myaux[j++ - lo];
+                result[k] = myaux[j++];
             else if (j>hi)
-                result[k] = myaux[i++ - lo];
-            else if (sort.less(myaux[j-lo], myaux[i-lo])) result[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
-            else if (myaux[j-lo] == myaux[i-lo] & myaux[j-lo] != commonNames.getLast()){ // no repeat
-                commonNames.add((String) myaux[j-lo]);
-                result[k] = myaux[i++ - lo];
+                result[k] = myaux[i++];
+            else if (sort.less(myaux[j], myaux[i])) result[k] = myaux[j++]; // if the smallest on the right size is smaller
+            else if (i != j & myaux[j] == myaux[i] & (commonNames.size() == 0 || myaux[j] != commonNames.getLast())){ // no repeat
+                commonNames.add((String) myaux[j]);
+                result[k] = myaux[i++];
             }
             else
-                result[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+                result[k] = myaux[i++]; // the smallest on the left is smaller. Do aux[i] first, and then i++
         }
         return commonNames;
     }
 
     public static void main(String[] args) {
         // Test Help function - generateNameArray
-        String[] nameList1 = generateNameArray(5);
-        sort.printStringArray(nameList1);
+        String[] nameList1 = generateNameArray(30);
+//        sort.printStringArray(nameList1);
+        String[] nameList2 = generateNameArray(30);
+//        sort.printStringArray(nameList2);
+        String[] nameList3 = generateNameArray(30);
+//        sort.printStringArray(nameList3);
 
         // Test sort
-        sort.sortTopDown(nameList1);
+//        sort.sortTopDown(nameList1);
+//        sort.printStringArray(nameList1);
+
+        // Test SearchforCommonNames
+//        String[] nameList1 = new String[]{"Alice", "Bob", "Tim"};
+//        String[] nameList2 = new String[]{"Bob", "Bob"};
+//        String[] nameList3 = new String[]{"Bob", "Alice"};
+        System.out.println(SearchforCommonNames(nameList1, nameList2, nameList3));
+        System.out.println("List 1: ");
         sort.printStringArray(nameList1);
+        System.out.println("List 2: ");
+        sort.printStringArray(nameList2);
+        System.out.println("List 3: ");
+        sort.printStringArray(nameList3);
     }
 }
