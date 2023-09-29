@@ -29,6 +29,7 @@ public class sort {
         }
     }
 
+    // 2.2.10
     // Idea: compare a[lo : mid] with a[End : mid+1], to reduce compare times
     public static void fasterMerge(Comparable[] a, int lo, int mid, int hi){
         //Todo: merge array a[lo, mid] and a[mid+1, hi]
@@ -75,6 +76,32 @@ public class sort {
     // Idea: when the length of the array is small, use Insertion sort alg, which performs better
     public static void mergeInsert(Comparable[] a, int lo, int mid, int hi){
         int threshold = 15;
+        if (a.length < threshold){
+            Insertion.sort(a);
+        }
+        else{
+            //Todo: merge array a[lo, mid] and a[mid+1, hi]
+            Comparable[] myaux = new Comparable[hi-lo+1]; //copy a[lo, hi] to aux[]
+            for (int k = lo; k <=hi ; k++) {
+                myaux[k-lo] = a[k];
+            }
+            // merge back to a[lo, hi]
+            int i = lo, j = mid+1;
+            for (int k = lo; k <= hi ; k++) {
+                if (i>mid)
+                    a[k] = myaux[j++ - lo];
+                else if (j>hi)
+                    a[k] = myaux[i++ - lo];
+                else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
+                else
+                    a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
+            }
+        }
+    }
+
+    // Idea: when the length of the array is small, use Insertion sort alg, which performs better
+    public static void mergeInsert(Comparable[] a, int lo, int mid, int hi, int cutoff){
+        int threshold = cutoff;
         if (a.length < threshold){
             Insertion.sort(a);
         }
