@@ -198,10 +198,16 @@ public class sort {
         System.out.println("");
     }
 
-
     public static void printStringLinkedList(LinkedList<Comparable> a){
         LinkedList<Comparable> aCopy = (LinkedList<Comparable>) a.clone();
         while (!aCopy.isEmpty()){System.out.print(aCopy.pollFirst()+"     ");}
+        System.out.println("");
+    }
+
+    public static void printLongArray(long[] a){
+        for (int i = 0; i < a.length; i++) {
+            System.out.print(a[i]+"     ");
+        }
         System.out.println("");
     }
 

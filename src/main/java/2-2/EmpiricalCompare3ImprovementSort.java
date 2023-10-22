@@ -21,7 +21,7 @@ import javax.swing.*;
  *
  */
 public class EmpiricalCompare3ImprovementSort {
-    static int repeat = 10;
+    static int repeat = 20;
 
     public static long timeConofMergeInsert(Comparable[] a, int cutoff){
         // TODO: calculate the consumed time for soring array "a" with threshold = cutoff
@@ -31,7 +31,7 @@ public class EmpiricalCompare3ImprovementSort {
         ImproveMergeSort.ImpSortBottomUpInsert(a, cutoff);
         // Stop measuring execution time
         long endTime = System.nanoTime();
-        time = (endTime - startTime)/10000000; // the unit of time is ms
+        time = (endTime - startTime)/10000; // the unit of time is ms-3
         return time;
     }
 
@@ -66,6 +66,8 @@ public class EmpiricalCompare3ImprovementSort {
     }
 
     public static void main(String[] args) {
-//        LineDrawer.drawLines(x,y);
+        // TODO: Find the optimal threshold of 'small' of ImproveMergeSort.ImpSortBottomUpInsert(Comparable[] a, int cutoff)
+        long[] time = optimalCutofMergeInsert(10000);
+        sort.printLongArray(time);
     }
 }
