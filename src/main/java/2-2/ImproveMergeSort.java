@@ -62,7 +62,7 @@ public class ImproveMergeSort {
         }
     }
 
-    //****************** Amend3 eliminate the copy to the aux *******************
+
     public static void ImpSortTopDownCheckOrder(Comparable[] a){
         //TODO: call sortTopDown
         ImpSortTopDownCheckOrder(a, 0, a.length-1);
@@ -88,6 +88,7 @@ public class ImproveMergeSort {
         }
     }
 
+    //****************** Amend3 eliminate the copy to the aux *******************
     // Idea: Eliminate the copy to the auxiliary
     public static void ImpSortBottomUpNoCopy(Comparable[] a){
         //TODO: use two for loop to merge
