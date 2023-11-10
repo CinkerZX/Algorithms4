@@ -1,3 +1,5 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MathHelpFun {
     static long max(long mat[][], int i, int j){
         // Handling the base cases
@@ -45,6 +47,27 @@ public class MathHelpFun {
         }
         return result;
     }
+
+    public static int[] zerosArr(int len){
+        int[] result = new int[len];
+        for (int i = 0; i < len; i++) {
+            result[i] = 0;
+        }
+        return result;
+    }
+
+    public static int[] onesArr(int len){
+        int[] result = new int[len];
+        for (int i = 0; i < len; i++) {
+            result[i] = 1;
+        }
+        return result;
+    }
+
+    public static int generateRandomInt(int min, int max){
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
+    }
+
 
     public static void main(String[] args) {
         int[] a = new int[]{1,2,3};

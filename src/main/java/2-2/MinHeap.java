@@ -43,13 +43,13 @@ public class MinHeap<T> {
         if (heap.isEmpty()){
             throw new IllegalArgumentException("Heap is empty.");
         }
-
         T min = heap.get(0);
 
-        T lastValue = heap.remove(heap.size()-1);
-
-        heap.set(0, lastValue);
-        heapifyDown(0);
+        if (heap.size() != 1) {
+            T lastValue = heap.remove(heap.size() - 1);
+            heap.set(0, lastValue);
+            heapifyDown(0);
+        }
         return min;
     }
 

@@ -12,8 +12,12 @@ import java.util.Comparator;
  */
 public class MultiMerge {
     private int K; // k-merge
+    private int[] UnEmptySubArray;
 
-    public MultiMerge(int k){K = k;}
+    public MultiMerge(int k){
+        K = k;
+        UnEmptySubArray = MathHelpFun.onesArr(k);
+    }
 
     private class Element{
         Comparable Value;
@@ -27,22 +31,22 @@ public class MultiMerge {
 
     Comparator<Element> elementComparator = (e1, e2) -> e1.Value.compareTo(e2.Value);
 
-    public void multiMerge(Comparable[] a, int[] subArrPointer, int[] subArrLen){
+    public void multiMerge(Comparable[] a, int[] subArrPointer, int[] subArrLen){ // ********** debug
         //Todo: merge the k ordered sub arrays
         int n = MathHelpFun.sum(subArrLen);
         Comparable[] myaux = new Comparable[n]; //copy the k sub arrays to aux[]
 
         MinHeap<Element> myMinHeap = new MinHeap<>(elementComparator);
-        int[] subpointer = zerosArr(this.K);
+        int[] subpointer = MathHelpFun.zerosArr(this.K);
 
+        int pointerAux = 0;
         for (int i = 0; i < this.K; i++) { // repeat copying k times
-            int pointerAux = 0;
             for (int j = 0; j < subArrLen[i]; j++) { // copy the ith array
                 myaux[pointerAux] = a[subArrPointer[i]+j];
                 pointerAux++;
             }
             // Put the k elements into the MinHeap
-            Element myElement = new Element(a[subArrPointer[i]],subpointer[i]);
+            Element myElement = new Element(a[subArrPointer[i]],i);
             myMinHeap.insert(myElement);
             subpointer[i]++;
         }
@@ -50,36 +54,33 @@ public class MultiMerge {
         // merge back to a
         int moveSubArrPointer;
         Element insertToMinHeap;
+        int insertFromSubArray;
 
-        // ************ Also need to maintain an array that save for the sub arrays that still have values that not being ordered
-        for (int i = 0; i < n; i++) {
-            Element minElement = myMinHeap.removeMin();
-            moveSubArrPointer = minElement.subArrayIndex; // from moveSubArrPointer's sub array
+        Element minElement;
+        for (int i = 0; i < n-this.K; i++) {
+            minElement = myMinHeap.removeMin();
+            moveSubArrPointer = minElement.subArrayIndex; // from moveSubArrPointer th sub array
             a[subArrPointer[0]+i] = minElement.Value;
-            subpointer[moveSubArrPointer]++; // move the pointer of this sub array
-            if (subpointer[moveSubArrPointer] < subArrLen[moveSubArrPointer]){ // this sub array is empty
-                insertToMinHeap = new Element(a[subArrPointer[moveSubArrPointer]+subpointer[moveSubArrPointer]], moveSubArrPointer);
+            if (subpointer[moveSubArrPointer] < subArrLen[moveSubArrPointer]){ // this the moveSubArrPointer th sub array is not empty
+                insertToMinHeap = new Element(myaux[subArrPointer[moveSubArrPointer]+subpointer[moveSubArrPointer]], moveSubArrPointer);
+                insertFromSubArray = moveSubArrPointer;
+//                subpointer[moveSubArrPointer]++; // move the pointer of this sub array
             }
-            else //select randomly one value from the rest arrays which is not empty
+            else{
+                insertFromSubArray = randomSelectNonZeroInt(UnEmptySubArray);
+                insertToMinHeap = new Element(myaux[subArrPointer[insertFromSubArray]+subpointer[insertFromSubArray]], insertFromSubArray);
+//                subpointer[insertFromSubArray]++;
+            }
+            subpointer[insertFromSubArray]++;
+            if (subpointer[insertFromSubArray] == subArrLen[insertFromSubArray]){UnEmptySubArray[insertFromSubArray] = 0;}
+            myMinHeap.insert(insertToMinHeap);
         }
-//
-//        // *********** maintain the minHeap and insert elements in myaux into a
-//
-//
-//        int i = lo, j = mid+1;
-//        for (int k = lo; k <= hi ; k++) {
-//            if (i>mid) // a[0, 1] is sorted, and a[0] < a[1]
-//                // i = k = lo = 1, aux[a[1], a[0], a[2], a[3]]
-//                // a[0] = aux[1]
-//                a[k] = myaux[j++ - lo];
-//            else if (j>hi) // a[2,3] is sorted, and a[2] < a[3]
-//                // j = 3, hi = 2, k = 2, i = 2, aux[a[0], a[1], a[3], a[2]];
-//                // a[2] = aux[3]
-//                a[k] = myaux[i++ - lo];
-//            else if (less(myaux[j-lo], myaux[i-lo])) a[k] = myaux[j++ - lo]; // if the smallest on the right size is smaller
-//            else
-//                a[k] = myaux[i++ - lo]; // the smallest on the left is smaller. Do aux[i] first, and then i++
-//        }
+        
+        // The rest k item, directly pop out from the MinHeap
+        for (int i = 0; i < this.K; i++) {
+            minElement = myMinHeap.removeMin();
+            a[n-this.K+i] = minElement.Value;
+        }
     }
 
 //    //Idea: breaking big problems into small problems
@@ -112,16 +113,19 @@ public class MultiMerge {
 //    }
 
     // HelpFunction
-    public static int[] zerosArr(int len){
-        int[] result = new int[len];
-        for (int i = 0; i < len; i++) {
-            result[i] = 0;
-        }
-        return result;
+    public static int randomSelectNonZeroInt(int[] arr){
+        int result = MathHelpFun.generateRandomInt(0,arr.length-1);
+        if (arr[result] !=0){return result;}
+        else return randomSelectNonZeroInt(arr);
     }
 
     public static void main(String[] args) {
-
+        MultiMerge myMultiMerge = new MultiMerge(3);
+        Comparable[] a = new Comparable[]{2,3,6,1,7,8,3,3,4};
+        int[] subArrayPointer = new int[]{0, 3, 6};
+        int[] subArrayLen = new int[]{3, 3, 3};
+        myMultiMerge.multiMerge(a,subArrayPointer, subArrayLen);
+        sort.printStringArray(a);
     }
 
 
