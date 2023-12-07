@@ -1,5 +1,5 @@
 
-import com.sun.deploy.net.proxy.WFirefoxProxyConfig;
+//import com.sun.deploy.net.proxy.WFirefoxProxyConfig;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 

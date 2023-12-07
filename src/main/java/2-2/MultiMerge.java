@@ -50,6 +50,9 @@ public class MultiMerge {
                 Element myElement = new Element(a[subArrPointer[i]],i);
                 myMinHeap.insert(myElement);
                 subpointer[i]++;
+                if (subpointer[i] == subArrLen[i]){ // **********
+                    UnEmptySubArray[i] = 0;
+                }else{UnEmptySubArray[i] = 1;}
             }
             else{
                 UnEmptySubArray[i] = 0;
@@ -62,29 +65,35 @@ public class MultiMerge {
         int insertFromSubArray;
 
         Element minElement;
-        for (int i = 0; i < n-this.K; i++) {
+//        for (int i = 0; i < n-this.K; i++) {
+        for (int i = 0; i < n-1; i++) {
             minElement = myMinHeap.removeMin();
             moveSubArrPointer = minElement.subArrayIndex; // from moveSubArrPointer th sub array
             a[subArrPointer[0]+i] = minElement.Value;
             if (subpointer[moveSubArrPointer] < subArrLen[moveSubArrPointer]){ // this the moveSubArrPointer th sub array is not empty
                 insertToMinHeap = new Element(myaux[subArrPointer[moveSubArrPointer]+subpointer[moveSubArrPointer]], moveSubArrPointer);
                 insertFromSubArray = moveSubArrPointer;
-//                subpointer[moveSubArrPointer]++; // move the pointer of this sub array
             }
-            else{
-                insertFromSubArray = randomSelectNonZeroInt(UnEmptySubArray);
-                insertToMinHeap = new Element(myaux[subArrPointer[insertFromSubArray]+subpointer[insertFromSubArray]], insertFromSubArray);
-//                subpointer[insertFromSubArray]++;
+            else{ // insert from other UnEmptySubArray
+                if (MathHelpFun.sum(UnEmptySubArray)!=0){
+                    insertFromSubArray = randomSelectNonZeroInt(UnEmptySubArray);
+                    insertToMinHeap = new Element(myaux[subArrPointer[insertFromSubArray]+subpointer[insertFromSubArray]], insertFromSubArray);
+                }
+                else{
+                    break; // if all sub array has been empty
+                }
             }
             subpointer[insertFromSubArray]++;
             if (subpointer[insertFromSubArray] == subArrLen[insertFromSubArray]){UnEmptySubArray[insertFromSubArray] = 0;}
             myMinHeap.insert(insertToMinHeap);
         }
-        // The rest k item, directly pop out from the MinHeap
-        for (int i = 0; i < this.K; i++) {
+        // The rest r item, directly pop out from the MinHeap (r <= k
+        int r = myMinHeap.size();
+        for (int i = 0; i < r; i++) {
             minElement = myMinHeap.removeMin();
-            a[n-this.K+i] = minElement.Value;
+            a[subArrPointer[0]+n-r+i] = minElement.Value;
         }
+        updateAfterMerge(subArrPointer, subArrLen);
     }
 
     //Idea: breaking big problems into small problems
@@ -98,39 +107,24 @@ public class MultiMerge {
     }
 
 //    public void multiMerge(Comparable[] a, int[] subArrPointer, int[] subArrLen){
-    public void sortTopDown(Comparable[] a, int[] subArrPointer, int[] subArrLen){
+    public void sortTopDown(Comparable[] a, int[] subArrPointer, int[] subArrLen){  // down 下来了，但递归回去的过程出了问题
         if (MathHelpFun.sum(subArrLen) == 0){return;}
         int[] subArrPointer2 = new int[this.K];
         int[] subArrLen2 = new int[this.K];
         for (int i = 0; i < this.K; i++) {
-            devideArrayintoKparts(subArrPointer[i], subArrPointer[i]+subArrLen[i]-1, subArrPointer2, subArrLen2);
-            sortTopDown(a,subArrPointer2, subArrLen2);
+            int c = subArrLen[i];
+            switch (c) {
+                case 1: // can already merge
+                    multiMerge(a, subArrPointer, subArrLen);
+                case 0: // no element
+                    break;
+                default:
+                    devideArrayintoKparts(subArrPointer[i], subArrPointer[i]+subArrLen[i]-1, subArrPointer2, subArrLen2);
+                    sortTopDown(a, subArrPointer2, subArrLen2);
+            }
         }
-        multiMerge(a, subArrPointer2, subArrLen2);
+//        multiMerge(a, subArrPointer, subArrLen);
     }
-
-//    public static void sortTopDown(Comparable[] a, int lo, int hi){
-//        //TODO: sort from the Top to Bottom
-//        if (hi <=lo) return;
-//        int mid = lo + (hi-lo)/2;
-//        sortTopDown(a, lo, mid);
-//        sortTopDown(a, mid+1, hi);
-//        //TODO: merge from the bottom to up
-//        merge(a, lo, mid, hi);
-////        printStringArray(a); // for test
-//    }
-
-//    // Idea: building small solutions into larger ones
-//    public static void sortBottomUp(Comparable[] a){
-//        //TODO: use two for loop to merge
-//        int N = a.length;
-//        for (int i = 1; i < N; i = i+i) { // i-- subarray size
-//            for (int lo = 0; lo < N-i ; lo += i+i) {
-//                merge(a, lo, lo+i-1, Math.min(lo+i-1+i, N-1)); // hi -- the mid+i, if it out of index, hi = N-1
-//                printStringArray(a); // for test
-//            }
-//        }
-//    }
 
     // HelpFunction
     public static int randomSelectNonZeroInt(int[] arr){
@@ -139,37 +133,79 @@ public class MultiMerge {
         else return randomSelectNonZeroInt(arr);
     }
 
-    public void devideArrayintoKparts(int lo, int hi, int[] subArrPointer, int[] subArrLen){
+    // Update subArrLen: after merge, the
+    public static void updateAfterMerge(int[] subArrPointer, int[] subArrLen){
+        subArrPointer[0] = subArrPointer[0];
+        subArrLen[0] = MathHelpFun.sum(subArrLen);
+        for (int i = 1; i < subArrPointer.length; i++) {
+            subArrPointer[i] = -1;
+            subArrLen[i] = 0;
+        }
+    }
+
+    public void devideArrayintoKparts(int lo, int hi, int[] subArrPointer, int[] subArrLen){ // need to amend: if hi - lo == 1, len == 1; then can already merge
         int len = hi-lo+1;
         int size = len/this.K;
-        if (len > this.K){
-            for (int i = 0; i < this.K; i++) {
-                subArrPointer[i] = lo + i*size;
-                if (i != this.K-1){
-                    subArrLen[i] = size;
+        int cases = 0;
+        if (lo == hi){cases = 3;}
+        if (len >= this.K*this.K){cases = 0;}
+        if (this.K*this.K > len & len > this.K){cases = 1;}
+        if (this.K>=len & len > 0){cases = 2;}
+
+        switch (cases){
+            case 0: // we have k groups, each group have [len - len/this.K*(k-1), len/this.K] items
+                for (int i = 0; i < this.K; i++) {
+                    subArrPointer[i] = lo + i*(size+1);
+                    if (i == this.K-1){
+                        subArrLen[i] = len-(size+1)*(this.K-1);
+                    }
+                    else{
+                        subArrLen[i] = size+1;
+                    }
                 }
-                else{subArrLen[i] = len-size*(i+1);}
-            }
-        }
-        else{
-            for (int i = 0; i < this.K; i++) {
-                if (i == 0){
-                    subArrPointer[i] = lo;
-                    subArrLen[i] = len;
+                break;
+            case 1: // we have less than size groups, and size < k
+                for (int i = 0; i <this.K; i++) {
+                    if (i<size){
+                        subArrPointer[i] = lo + i*this.K;
+                        subArrLen[i] = this.K;
+                    }else{
+                        if (i*this.K<len){
+                            subArrPointer[i] = lo + i*this.K;
+                            subArrLen[i] = len-size*this.K;
+                        }
+                        else{
+                            subArrPointer[i] = -1;
+                            subArrLen[i] = 0;
+                        }
+                    }
                 }
-                else{
-                    subArrLen[i] = 0;
+                break;
+            case 2: // we have less than this.K items
+                for (int i = 0; i < len; i++) {
+                    subArrPointer[i] = lo + i;
+                    subArrLen[i] = 1;
                 }
-            }
+                if (this.K > len){
+                    for (int i = len; i < this.K; i++) {
+                        subArrPointer[i] = -1;
+                        subArrLen[i] = 0;
+                    }
+                }
+                break;
+            case 3: // there are zero items left
+                subArrLen = MathHelpFun.zerosArr(this.K);
+                break;
         }
     }
 
     public static void main(String[] args) {
         MultiMerge myMultiMerge = new MultiMerge(3);
-        Comparable[] a = new Comparable[]{2,3,6,1,7,8,3,3,4};
-        int[] subArrayPointer = new int[]{0, 3, 6};
-        int[] subArrayLen = new int[]{3, 3, 3};
-        myMultiMerge.multiMerge(a,subArrayPointer, subArrayLen);
+//        Comparable[] a = new Comparable[]{2,3,6,1,7,8,3,3,4};
+        Comparable[] a = new Comparable[]{2,3,6,1};
+        // why when there are nl+1 works, but when there are nk+2 or nk does not work, need to further debug
+        sort.printStringArray(a);
+        myMultiMerge.sortTopDown(a);
         sort.printStringArray(a);
     }
 
