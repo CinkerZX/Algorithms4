@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.Comparator;
 
 /**
@@ -106,24 +107,35 @@ public class MultiMerge {
         sortTopDown(a, subArrPointer, subArrLen);
     }
 
-//    public void multiMerge(Comparable[] a, int[] subArrPointer, int[] subArrLen){
-    public void sortTopDown(Comparable[] a, int[] subArrPointer, int[] subArrLen){  // down 下来了，但递归回去的过程出了问题
+    public void sortTopDown(Comparable[] a, int[] subArrPointer, int[] subArrLen){
         if (MathHelpFun.sum(subArrLen) == 0){return;}
         int[] subArrPointer2 = new int[this.K];
         int[] subArrLen2 = new int[this.K];
-        for (int i = 0; i < this.K; i++) {
-            int c = subArrLen[i];
-            switch (c) {
-                case 1: // can already merge
-                    multiMerge(a, subArrPointer, subArrLen);
-                case 0: // no element
-                    break;
-                default:
-                    devideArrayintoKparts(subArrPointer[i], subArrPointer[i]+subArrLen[i]-1, subArrPointer2, subArrLen2);
-                    sortTopDown(a, subArrPointer2, subArrLen2);
+
+        // if ordered, then merge, if not ordered, then dive into it
+        for (int i = 0; i <= this.K; i++) {
+            if (checkIfMerge(a, subArrPointer, subArrLen)){
+                multiMerge(a, subArrPointer, subArrLen);
+                break;
             }
+            else{// dive into each of the not ordered one
+                devideArrayintoKparts(subArrPointer[i], subArrPointer[i]+subArrLen[i]-1, subArrPointer2, subArrLen2);
+                sortTopDown(a, subArrPointer2, subArrLen2);
+            }
+            // 有两种情况需要merge，第一种情况是每一个小组都已经ordered了，所以需要一个check是否order的函数，第二种情况是，只有1个
+//            int c = subArrLen[i];
+//            switch (c) {
+//                case 1: // can already merge
+//                    multiMerge(a, subArrPointer, subArrLen);
+//                    break;
+//                case 0: // no element
+//                    break;
+//                default:
+//                    devideArrayintoKparts(subArrPointer[i], subArrPointer[i]+subArrLen[i]-1, subArrPointer2, subArrLen2);
+//                    sortTopDown(a, subArrPointer2, subArrLen2);
+//                    break;
+//            }
         }
-//        multiMerge(a, subArrPointer, subArrLen);
     }
 
     // HelpFunction
@@ -133,7 +145,7 @@ public class MultiMerge {
         else return randomSelectNonZeroInt(arr);
     }
 
-    // Update subArrLen: after merge, the
+    // Update subArrLen: after merge
     public static void updateAfterMerge(int[] subArrPointer, int[] subArrLen){
         subArrPointer[0] = subArrPointer[0];
         subArrLen[0] = MathHelpFun.sum(subArrLen);
@@ -141,6 +153,34 @@ public class MultiMerge {
             subArrPointer[i] = -1;
             subArrLen[i] = 0;
         }
+    }
+
+    // Check if need to merge bottom up. Idea: if subArrLen, except for the first one, the rest are zero, then should break
+    public static boolean checkIfnonZeroAllZero(int[] subArrLen){
+        return (MathHelpFun.sum(subArrLen) - subArrLen[0] == 0);
+    }
+
+    // Check if the arrar is ordered.
+    public static boolean checkIfOrdered(Comparable[] a, int startIndex, int length){
+        if (length == 1){return true;}
+        else{
+            for (int i = 0; i < length-1; i++) {
+                if (!sort.less(a[startIndex+i],a[startIndex+i+1])){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //Check if the k parts of a can be merged. Idea: if each part if ordered, then can be merged
+    public static boolean checkIfMerge(Comparable[] a, int[] subArrPointer, int[] subArrLen){
+        for (int i = 0; i < subArrPointer.length; i++) { // check each of the k parts
+            if(!checkIfOrdered(a, subArrPointer[i], subArrLen[i])){// if there is one that not ordered
+                return false;
+            }
+        }
+        return true;
     }
 
     public void devideArrayintoKparts(int lo, int hi, int[] subArrPointer, int[] subArrLen){ // need to amend: if hi - lo == 1, len == 1; then can already merge
@@ -152,15 +192,18 @@ public class MultiMerge {
         if (this.K*this.K > len & len > this.K){cases = 1;}
         if (this.K>=len & len > 0){cases = 2;}
 
-        switch (cases){
+        switch (cases){ // ************************************************
             case 0: // we have k groups, each group have [len - len/this.K*(k-1), len/this.K] items
                 for (int i = 0; i < this.K; i++) {
-                    subArrPointer[i] = lo + i*(size+1);
+//                    subArrPointer[i] = lo + i*(size+1);
+                    subArrPointer[i] = lo + i*size;
                     if (i == this.K-1){
-                        subArrLen[i] = len-(size+1)*(this.K-1);
+//                        subArrLen[i] = len-(size+1)*(this.K-1);
+                        subArrLen[i] = len-(size)*(this.K-1);
                     }
                     else{
-                        subArrLen[i] = size+1;
+//                        subArrLen[i] = size+1;
+                        subArrLen[i] = size;
                     }
                 }
                 break;
@@ -201,8 +244,7 @@ public class MultiMerge {
 
     public static void main(String[] args) {
         MultiMerge myMultiMerge = new MultiMerge(3);
-//        Comparable[] a = new Comparable[]{2,3,6,1,7,8,3,3,4};
-        Comparable[] a = new Comparable[]{2,3,6,1};
+        Comparable[] a = new Comparable[]{3,2,1,0,2,6,8,5,3,1};
         // why when there are nl+1 works, but when there are nk+2 or nk does not work, need to further debug
         sort.printStringArray(a);
         myMultiMerge.sortTopDown(a);
